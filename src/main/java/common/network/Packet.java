@@ -1,13 +1,14 @@
-package net.vaultcraft.vcbungee.network;
+package common.network;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 
 /**
  * Created by tacticalsk8er on 8/18/2014.
  */
-public class Packet {
+public class Packet implements Serializable{
 
     private CommandType commandType;
     private String channel;

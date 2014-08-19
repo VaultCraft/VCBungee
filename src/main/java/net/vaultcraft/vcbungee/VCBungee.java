@@ -35,11 +35,25 @@ public class VCBungee extends Plugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        if(!getDataFolder().exists())
+            getDataFolder().mkdir();
+
+        File configurationFile = new File(getDataFolder(), "config.yml");
+        if (!configurationFile.exists()) {
+            try {
+                configurationFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         try {
-            configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "config.yml"));
+            configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(configurationFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         ClassConfig.loadConfig(MongoInfo.class, configuration);
         ClassConfig.loadConfig(this.getClass(), configuration);
         ClassConfig.updateConfig(MongoInfo.class, configuration);

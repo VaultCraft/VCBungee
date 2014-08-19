@@ -1,5 +1,7 @@
 package net.vaultcraft.vcbungee.network;
 
+import common.network.Packet;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -24,6 +26,15 @@ public class ClientSendThread implements Runnable {
         try {
             ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
             while(true) {
+                if(!client.isConnected()) {
+                    try {
+                        client.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+
                 if(packets.size() > 0) {
                     Packet packet = packets.get(0);
                     out.writeObject(packet);

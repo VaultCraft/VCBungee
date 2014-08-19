@@ -6,10 +6,10 @@ import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.vaultcraft.vcbungee.VCBungee;
-import net.vaultcraft.vcbungee.network.Packet;
+import common.network.Packet;
 import net.vaultcraft.vcbungee.network.ServerMessageHandler;
 import net.vaultcraft.vcbungee.user.NetworkUser;
-import net.vaultcraft.vcbungee.user.UserInfo;
+import common.network.UserInfo;
 import net.vaultcraft.vcbungee.user.UserNotInUseEvent;
 
 import java.io.ByteArrayOutputStream;

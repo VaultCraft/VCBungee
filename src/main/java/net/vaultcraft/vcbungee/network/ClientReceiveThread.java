@@ -1,13 +1,15 @@
 package net.vaultcraft.vcbungee.network;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
+import common.network.Packet;
+import common.network.UserInfo;
 import net.vaultcraft.vcbungee.listeners.BungeeListener;
 import net.vaultcraft.vcbungee.user.NetworkUser;
-import net.vaultcraft.vcbungee.user.UserInfo;
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
@@ -33,6 +35,15 @@ public class ClientReceiveThread implements Runnable {
             e.printStackTrace();
         }
         while(true)  {
+            if(!client.isConnected()) {
+                try {
+                    client.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+
             try {
                 Packet packet = (Packet) in.readObject();
                 if(packet == null)
@@ -80,8 +91,7 @@ public class ClientReceiveThread implements Runnable {
     private void user(String channel, ObjectInputStream stream) {
         String uuid;
         String serverName;
-        ByteArrayDataOutput out;
-        ByteArrayOutputStream outStream;
+        ByteArrayOutputStream out;
         ObjectOutputStream objOut;
         UserInfo userInfo;
         Packet packet;
@@ -99,9 +109,9 @@ public class ClientReceiveThread implements Runnable {
                     BungeeListener.addWaiting(uuid + " " + serverName + " " + name);
                 }
                 userInfo = new UserInfo(serverName, user);
-                outStream = new ByteArrayOutputStream();
+                out = new ByteArrayOutputStream();
                 try {
-                    objOut = new ObjectOutputStream(outStream);
+                    objOut = new ObjectOutputStream(out);
                     objOut.writeUTF(uuid);
                     objOut.writeObject(userInfo);
                     objOut.flush();
@@ -109,7 +119,7 @@ public class ClientReceiveThread implements Runnable {
                     e.printStackTrace();
                     break;
                 }
-                packet = new Packet(Packet.CommandType.USER, channel, outStream.toByteArray());
+                packet = new Packet(Packet.CommandType.USER, channel, out.toByteArray());
                 ServerMessageHandler.sendPacket(name, packet);
                 user.setOnlineServer(name);
                 user.setInUse(true);
@@ -149,8 +159,14 @@ public class ClientReceiveThread implements Runnable {
                     break;
                 }
                 boolean online = NetworkUser.fromUUID(uuid) != null;
-                out = ByteStreams.newDataOutput();
-                out.writeBoolean(online);
+                out = new ByteArrayOutputStream();
+                try {
+                    objOut = new ObjectOutputStream(out);
+                    objOut.writeBoolean(online);
+                    objOut.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 packet = new Packet(Packet.CommandType.USER, channel, out.toByteArray());
                 ServerMessageHandler.sendPacket(name, packet);
                 break;

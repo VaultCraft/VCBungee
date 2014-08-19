@@ -1,14 +1,17 @@
-package net.vaultcraft.vcbungee.user;
+package common.network;
 
 import net.md_5.bungee.api.ProxyServer;
+import net.vaultcraft.vcbungee.user.NetworkUser;
+import net.vaultcraft.vcbungee.user.UserNotInUseEvent;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
  */
-public class UserInfo {
+public class UserInfo implements Serializable{
 
     private int group = 0;
     private boolean banned = false;

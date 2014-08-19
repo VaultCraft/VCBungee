@@ -1,5 +1,6 @@
 package net.vaultcraft.vcbungee.network;
 
+import common.network.Packet;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.vaultcraft.vcbungee.VCBungee;
@@ -30,6 +31,8 @@ public class ServerMessageHandler implements Runnable {
         try {
             messageServer = new ServerSocket(port);
             messageServer.setSoTimeout(5000);
+            ProxyServer.getInstance().getLogger().info("Message Server Started");
+            ProxyServer.getInstance().getScheduler().runAsync(VCBungee.getInstance(), this);
         } catch (IOException e) {
             ProxyServer.getInstance().getLogger().severe("Error while starting up Message Server! Shutting down proxy.");
             e.printStackTrace();
@@ -67,6 +70,7 @@ public class ServerMessageHandler implements Runnable {
                 clientSendThreads.put(client, sendThread);
                 List<ScheduledTask> tasks = new ArrayList<>(Arrays.asList(receiveTask, sendTask));
                 clientTasks.put(client, tasks);
+                ProxyServer.getInstance().getLogger().info("Client connected");
             } catch (SocketTimeoutException ignore) {
             } catch (IOException e) {
                 e.printStackTrace();
@@ -104,6 +108,7 @@ public class ServerMessageHandler implements Runnable {
         clientSendThreads.clear();
         clientTasks.clear();
         clientNames.clear();
+        running = false;
         try {
             messageServer.close();
         } catch (IOException e) {

@@ -5,7 +5,6 @@
 #  Connor Hollasch
 #  Nick Peterson
 ###########
-name: VCUtils
+name: VCBungee
 version: 1.0
-authors: [IModZombies4Fun, Tacticalsk8er]
 main: net.vaultcraft.vcbungee.VCBungee
