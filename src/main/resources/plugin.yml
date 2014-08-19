@@ -1,0 +1,11 @@
+###########
+# VCUtils
+# General Utility for VaultCraft (July 19, 2014)
+# Authors:
+#  Connor Hollasch
+#  Nick Peterson
+###########
+name: VCUtils
+version: 1.0
+authors: [IModZombies4Fun, Tacticalsk8er]
+main: net.vaultcraft.vcbungee.VCBungee
