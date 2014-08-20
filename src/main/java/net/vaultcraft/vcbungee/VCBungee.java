@@ -9,6 +9,7 @@ import net.vaultcraft.vcbungee.database.mongo.MongoDB;
 import net.vaultcraft.vcbungee.database.mongo.MongoInfo;
 import net.vaultcraft.vcbungee.network.ServerMessageHandler;
 import net.vaultcraft.vcbungee.user.NetworkUser;
+import net.vaultcraft.vcbungee.vote.Votifier;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,11 +57,17 @@ public class VCBungee extends Plugin {
 
         ClassConfig.loadConfig(MongoInfo.class, configuration);
         ClassConfig.loadConfig(this.getClass(), configuration);
+        ClassConfig.loadConfig(Votifier.class, configuration);
         ClassConfig.updateConfig(MongoInfo.class, configuration);
         ClassConfig.updateConfig(this.getClass(), configuration);
+        ClassConfig.updateConfig(Votifier.class, configuration);
+
         this.saveConfig();
 
         server = new ServerMessageHandler(port);
+
+        Votifier votifier = new Votifier();
+        votifier.onEnable();
 
         try {
             mongoDB = new MongoDB(MongoInfo.host, MongoInfo.port);
@@ -71,6 +78,8 @@ public class VCBungee extends Plugin {
 
     @Override
     public void onDisable() {
+        Votifier.getInstance().onDisable();
+
         NetworkUser.disable();
         server.close();
         mongoDB.close();
