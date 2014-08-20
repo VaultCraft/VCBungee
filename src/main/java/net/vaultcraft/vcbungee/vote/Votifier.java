@@ -18,17 +18,17 @@
 
 package net.vaultcraft.vcbungee.vote;
 
-import java.io.File;
-import java.security.KeyPair;
-import java.util.ArrayList;
-import java.util.List;
-
 import net.vaultcraft.vcbungee.VCBungee;
 import net.vaultcraft.vcbungee.config.ClassConfig;
 import net.vaultcraft.vcbungee.vote.crypto.RSAIO;
 import net.vaultcraft.vcbungee.vote.crypto.RSAKeygen;
 import net.vaultcraft.vcbungee.vote.model.VoteListener;
 import net.vaultcraft.vcbungee.vote.net.VoteReceiver;
+
+import java.io.File;
+import java.security.KeyPair;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The main Votifier plugin class.
@@ -50,13 +50,13 @@ public class Votifier {
     private KeyPair keyPair;
 
     @ClassConfig.Config(path = "votes.host")
-    public String _hostAddress = "localhost";
+    public static String _hostAddress = "localhost";
     @ClassConfig.Config(path = "votes.port")
-    public int _hostPort = 8192;
+    public static int _hostPort = 8192;
     @ClassConfig.Config(path = "votes.debug")
-    public boolean _debug = false;
+    public static  boolean _debug = false;
     @ClassConfig.Config(path = "votes.listener_folder")
-    public String _listenerDirectory;
+    public static String _listenerDirectory;
 
     public void onEnable() {
         Votifier.instance = this;

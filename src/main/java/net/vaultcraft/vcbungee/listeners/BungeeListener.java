@@ -1,20 +1,17 @@
 package net.vaultcraft.vcbungee.listeners;
 
+import common.network.PacketOutUserGet;
+import common.network.UserInfo;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.vaultcraft.vcbungee.VCBungee;
-import common.network.Packet;
 import net.vaultcraft.vcbungee.network.ServerMessageHandler;
 import net.vaultcraft.vcbungee.user.NetworkUser;
-import common.network.UserInfo;
 import net.vaultcraft.vcbungee.user.UserNotInUseEvent;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,18 +49,7 @@ public class BungeeListener implements Listener {
             if(!user.getPlayer().getUniqueId().toString().equals(parts[0]))
                 continue;
             UserInfo userInfo = new UserInfo(parts[1], user);
-            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-            try {
-                ObjectOutputStream objOut = new ObjectOutputStream(outStream);
-                objOut.writeUTF(user.getPlayer().getUniqueId().toString());
-                objOut.writeObject(userInfo);
-                objOut.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-                break;
-            }
-            Packet packet = new Packet(Packet.CommandType.USER, "get", outStream.toByteArray());
-            ServerMessageHandler.sendPacket(parts[2], packet);
+            ServerMessageHandler.sendPacket(parts[2], new PacketOutUserGet(user.getPlayer().getUniqueId().toString(), userInfo));
             user.setOnlineServer(parts[2]);
             user.setInUse(true);
             break;

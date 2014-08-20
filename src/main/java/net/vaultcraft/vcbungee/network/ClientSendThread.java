@@ -26,12 +26,7 @@ public class ClientSendThread implements Runnable {
         try {
             ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
             while(true) {
-                if(!client.isConnected()) {
-                    try {
-                        client.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                if(!client.isConnected() || client.isInputShutdown() || client.isOutputShutdown() || client.isClosed()) {
                     break;
                 }
 

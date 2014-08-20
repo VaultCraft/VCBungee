@@ -35,8 +35,6 @@ public class UserInfo implements Serializable{
         this.tokens = user.getTokens();
         this.globalUserdata = user.getGlobalUserdata();
         this.userdata = user.getUserdata(serverName);
-        UserNotInUseEvent event = new UserNotInUseEvent(user);
-        ProxyServer.getInstance().getPluginManager().callEvent(event);
     }
 
     public void updateUser(String uuid, String serverName) {
@@ -50,6 +48,7 @@ public class UserInfo implements Serializable{
         user.setTokens(tokens);
         user.setGlobalUserdata(globalUserdata);
         user.setUserdata(serverName, userdata);
+        ProxyServer.getInstance().getPluginManager().callEvent(new UserNotInUseEvent(user));
     }
 
 }
