@@ -1,12 +1,12 @@
 package net.vaultcraft.vcbungee.network;
 
 import common.network.Packet;
+import net.md_5.bungee.api.ProxyServer;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by tacticalsk8er on 8/18/2014.
@@ -15,7 +15,9 @@ public class ClientSendThread implements Runnable {
 
     private Socket client;
 
-    private List<Packet> packets = new ArrayList<>();
+    private ConcurrentLinkedQueue<Packet> packets = new ConcurrentLinkedQueue<>();
+    private String name;
+    private boolean running = true;
 
     public ClientSendThread(Socket client) {
         this.client = client;
@@ -25,23 +27,29 @@ public class ClientSendThread implements Runnable {
     public void run() {
         try {
             ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
-            while(true) {
-                if(!client.isConnected() || client.isInputShutdown() || client.isOutputShutdown() || client.isClosed()) {
-                    break;
-                }
-
+            while(running) {
                 if(packets.size() > 0) {
-                    Packet packet = packets.get(0);
+                    Packet packet = packets.poll();
                     out.writeObject(packet);
-                    packets.remove(0);
+                    ProxyServer.getInstance().getLogger().info("Message sent to " + name);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
+            running = false;
         }
     }
 
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void addPacket(Packet packet) {
+        ProxyServer.getInstance().getLogger().info("Packet added to que of " + name);
         packets.add(packet);
     }
 

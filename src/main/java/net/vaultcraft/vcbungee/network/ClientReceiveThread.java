@@ -2,6 +2,7 @@ package net.vaultcraft.vcbungee.network;
 
 import common.network.Packet;
 import common.network.PacketInStart;
+import net.md_5.bungee.api.ProxyServer;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,6 +17,7 @@ public class ClientReceiveThread implements Runnable {
     private ObjectInputStream in;
 
     private boolean start = false;
+    private boolean running = true;
     private String name;
 
     public ClientReceiveThread(Socket client) {
@@ -28,12 +30,9 @@ public class ClientReceiveThread implements Runnable {
             in = new ObjectInputStream(client.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
+            running = false;
         }
-        while (true) {
-            if (!client.isConnected() || client.isInputShutdown() || client.isOutputShutdown() || client.isClosed()) {
-                break;
-            }
-
+        while (running) {
             try {
                 Packet packet = (Packet) in.readObject();
                 if (packet == null)
@@ -42,13 +41,24 @@ public class ClientReceiveThread implements Runnable {
                     if (!(packet instanceof PacketInStart))
                         continue;
                     packet.run(client, name);
+                    start = true;
                     continue;
                 }
+                ProxyServer.getInstance().getLogger().info("Messaged Received from " + name);
                 packet.run(client, name);
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
+                running = false;
             }
         }
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean isStart() {

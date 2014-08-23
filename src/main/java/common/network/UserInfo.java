@@ -1,8 +1,7 @@
 package common.network;
 
-import net.md_5.bungee.api.ProxyServer;
 import net.vaultcraft.vcbungee.user.NetworkUser;
-import net.vaultcraft.vcbungee.user.UserNotInUseEvent;
+import net.vaultcraft.vcbungee.user.UserReadyThread;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,7 +12,7 @@ import java.util.HashMap;
  */
 public class UserInfo implements Serializable{
 
-    private int group = 0;
+    private int group = 1;
     private boolean banned = false;
     private Date tempBan = null;
     private boolean muted = false;
@@ -25,7 +24,8 @@ public class UserInfo implements Serializable{
     private HashMap<String, String> globalUserdata = new HashMap<>();
     private HashMap<String, String> userdata = new HashMap<>();
 
-    public UserInfo(String serverName, NetworkUser user) {
+    public UserInfo(String serverName, String uuid) {
+        NetworkUser user = NetworkUser.fromUUID(uuid);
         this.group = user.getGroup();
         this.banned = user.isBanned();
         this.tempBan = user.getTempBan();
@@ -48,7 +48,60 @@ public class UserInfo implements Serializable{
         user.setTokens(tokens);
         user.setGlobalUserdata(globalUserdata);
         user.setUserdata(serverName, userdata);
-        ProxyServer.getInstance().getPluginManager().callEvent(new UserNotInUseEvent(user));
+        if(user.isDisconnected())
+            NetworkUser.remove(user.getPlayer());
+        else
+            UserReadyThread.addReadyUser(user);
+    }
+
+    public void saveUser(String uuid, String serverName) {
+        NetworkUser user = NetworkUser.fromUUID(uuid);
+        user.setGroup(group);
+        user.setBanned(banned);
+        user.setTempBan(tempBan);
+        user.setMuted(muted);
+        user.setTempMute(tempMute);
+        user.setMoney(serverName, money);
+        user.setTokens(tokens);
+        user.setGlobalUserdata(globalUserdata);
+        user.setUserdata(serverName, userdata);
+        user.save();
+    }
+
+    public int getGroup() {
+        return group;
+    }
+
+    public boolean isBanned() {
+        return banned;
+    }
+
+    public Date getTempBan() {
+        return tempBan;
+    }
+
+    public boolean isMuted() {
+        return muted;
+    }
+
+    public Date getTempMute() {
+        return tempMute;
+    }
+
+    public double getMoney() {
+        return money;
+    }
+
+    public int getTokens() {
+        return tokens;
+    }
+
+    public HashMap<String, String> getGlobalUserdata() {
+        return globalUserdata;
+    }
+
+    public HashMap<String, String> getUserdata() {
+        return userdata;
     }
 
 }
