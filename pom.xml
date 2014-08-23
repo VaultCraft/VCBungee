@@ -54,6 +54,10 @@
                             <pattern>org.apache.commons.io</pattern>
                             <shadedPattern>${project.groupId}.shade.commonsio</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>org.json.simple</pattern>
+                            <shadedPattern>${project.groupId}.shade.simplejson</shadedPattern>
+                        </relocation>
                     </relocations>
                     <artifactSet>
                         <includes>
@@ -61,6 +65,7 @@
                             <include>org.mongodb:mongo-java-driver</include>
                             <include>org.mongodb:mongo-java-driver-core</include>
                             <include>commons-io:commons-io</include>
+                            <include>com.googlecode.json-simple:json-simple</include>
                         </includes>
                     </artifactSet>
                 </configuration>
@@ -94,6 +99,11 @@
             <version>LATEST</version>
             <type>jar</type>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
         </dependency>
     </dependencies>
 </project>

@@ -24,7 +24,7 @@ public class PacketInStart implements Packet, Serializable {
 
     @Override
     public void run(Socket client, String clientName) {
-        ServerMessageHandler.addClientName(client, this.name);
+        ServerMessageHandler.setClientName(client, name);
         ProxyServer.getInstance().getLogger().info("Client " + name + " is ready.");
     }
 }

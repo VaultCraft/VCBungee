@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,7 +23,7 @@ public class ServerMessageHandler implements Runnable {
     private static volatile ConcurrentHashMap<Socket, ClientSendThread> clientSendThreads = new ConcurrentHashMap<>();
     private static volatile ConcurrentHashMap<Socket, ClientReceiveThread> clientReceiveThreads = new ConcurrentHashMap<>();
     private static volatile ConcurrentHashMap<Socket, List<ScheduledTask>> clientTasks = new ConcurrentHashMap<>();
-    private static volatile ConcurrentHashMap<String, Socket> clientNames = new ConcurrentHashMap<>();
+    private static HashMap<String, Socket> clientNames = new HashMap<>();
 
     private ServerSocket messageServer;
     private boolean running = true;
@@ -40,11 +41,6 @@ public class ServerMessageHandler implements Runnable {
         }
     }
 
-    public static void addClientName(Socket client, String name) {
-        clientNames.put(name, client);
-    }
-
-
     @Override
     public void run() {
         while (running) {
@@ -56,6 +52,8 @@ public class ServerMessageHandler implements Runnable {
                     ClientReceiveThread clientThread = clientReceiveThreads.get(socket);
                     if (clientThread.isStart())
                         clientNames.remove(clientThread.getName());
+                    clientThread.setRunning(false);
+                    clientSendThreads.get(socket).setRunning(false);
                     clientReceiveThreads.remove(socket);
                     clientSendThreads.remove(socket);
                 }
@@ -79,10 +77,22 @@ public class ServerMessageHandler implements Runnable {
     }
 
     public static void sendPacket(String clientName, Packet packet) {
-        if(clientNames.contains(clientName)) {
+        if(clientNames.containsKey(clientName)) {
+            ProxyServer.getInstance().getLogger().info("Starting to send a packet.");
             Socket socket = clientNames.get(clientName);
             clientSendThreads.get(socket).addPacket(packet);
+        } else {
+            ProxyServer.getInstance().getLogger().info("Name is not found: " + clientName);
         }
+    }
+
+    public static void setClientName(Socket socket, String name) {
+        clientReceiveThreads.get(socket).setName(name);
+        clientSendThreads.get(socket).setName(name);
+        clientNames.put(name, socket);
+        ProxyServer.getInstance().getLogger().info("Client Names: ");
+        for(String clientName : clientNames.keySet())
+            ProxyServer.getInstance().getLogger().info(clientName);
     }
 
     public static void sendPacketToAll(Socket sender, Packet packet) {
@@ -95,9 +105,8 @@ public class ServerMessageHandler implements Runnable {
 
     public void close() {
         for(Socket socket : clientTasks.keySet()) {
-            List<ScheduledTask> scheduledTasks = clientTasks.get(socket);
-            for(ScheduledTask task : scheduledTasks)
-                task.cancel();
+            clientReceiveThreads.get(socket).setRunning(false);
+            clientSendThreads.get(socket).setRunning(false);
             try {
                 socket.close();
             } catch (IOException e) {

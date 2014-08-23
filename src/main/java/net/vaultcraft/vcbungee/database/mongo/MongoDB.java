@@ -1,8 +1,11 @@
 package net.vaultcraft.vcbungee.database.mongo;
 
 import com.mongodb.*;
+import net.md_5.bungee.api.ProxyServer;
+import net.vaultcraft.vcbungee.VCBungee;
 
 import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * WARNING: This class has not been tested!
@@ -21,8 +24,13 @@ public class MongoDB {
      * @param port Port number of the MongoDB server.
      * @throws UnknownHostException
      */
-    public MongoDB(String host, int port) throws UnknownHostException {
-        client = new MongoClient(host, port);
+    public MongoDB(final String host, final int port) throws UnknownHostException {
+        ProxyServer.getInstance().getScheduler().schedule(VCBungee.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                client = new MongoClient(host, port);
+            }
+        }, 0, TimeUnit.MILLISECONDS);
     }
 
     /**

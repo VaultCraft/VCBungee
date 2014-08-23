@@ -7,8 +7,10 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.vaultcraft.vcbungee.config.ClassConfig;
 import net.vaultcraft.vcbungee.database.mongo.MongoDB;
 import net.vaultcraft.vcbungee.database.mongo.MongoInfo;
+import net.vaultcraft.vcbungee.listeners.BungeeListener;
 import net.vaultcraft.vcbungee.network.ServerMessageHandler;
 import net.vaultcraft.vcbungee.user.NetworkUser;
+import net.vaultcraft.vcbungee.user.UserReadyThread;
 import net.vaultcraft.vcbungee.vote.Votifier;
 
 import java.io.File;
@@ -65,6 +67,7 @@ public class VCBungee extends Plugin {
         this.saveConfig();
 
         server = new ServerMessageHandler(port);
+        new BungeeListener();
 
         Votifier votifier = new Votifier();
         votifier.onEnable();
@@ -74,6 +77,8 @@ public class VCBungee extends Plugin {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+
+        this.getProxy().getScheduler().runAsync(this, new UserReadyThread());
     }
 
     @Override

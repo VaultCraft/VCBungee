@@ -3,6 +3,7 @@ package net.vaultcraft.vcbungee.user;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.vaultcraft.vcbungee.VCBungee;
 
@@ -30,9 +31,10 @@ public class NetworkUser {
     private ProxiedPlayer player;
 
     private String onlineServer = "";
-    private boolean inUse = false;
+    private String uuid;
+    private boolean disconnected = false;
 
-    private int group = 0;
+    private int group = 1;
     private boolean banned = false;
     private Date tempBan = null;
     private boolean muted = false;
@@ -46,19 +48,25 @@ public class NetworkUser {
 
     public NetworkUser(final ProxiedPlayer player) {
         this.player = player;
+        try {
+            this.uuid = UUIDFetcher.getUUIDOf(player.getName()).toString();
+        } catch (Exception e) {
+            player.disconnect(new TextComponent("Error in getting your UUID. Notify Admins."));
+            e.printStackTrace();
+        }
         async_player_map.put(player, this);
-        async_uuid_map.put(player.getUniqueId().toString(), this);
+        async_uuid_map.put(this.uuid, this);
         ProxyServer.getInstance().getScheduler().runAsync(VCBungee.getInstance(), new Runnable() {
             @Override
             public void run() {
-                DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
+                DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", uuid);
                 if (dbObject != null) {
-                    group = dbObject.get("Group") == null? 0 : (Integer) dbObject.get("Grpup");
+                    group = dbObject.get("Group") == null ? 1 : (Integer) dbObject.get("Group");
                     banned = dbObject.get("Banned") == null ? false : (Boolean) dbObject.get("Banned");
                     tempBan = (Date) dbObject.get("TempBan");
                     muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
                     tempMute = (Date) dbObject.get("TempMute");
-                    for(String serverName : VCBungee.servers) {
+                    for (String serverName : VCBungee.servers) {
                         Object o = dbObject.get(serverName + "-Money");
                         double value = (o == null ? 0 : (o instanceof Double ? (Double) o : (Integer) o));
                         double money = dbObject.get(serverName + "-Money") == null ? 0 : value;
@@ -69,7 +77,13 @@ public class NetworkUser {
 
                     tokens = dbObject.get("Tokens") == null ? 0 : (Integer) dbObject.get("Tokens");
                     globalUserdata = dbObject.get("Global-UserData") == null ? new HashMap<String, String>() : parseData((String) dbObject.get("Global-UserData"));
+                } else {
+                    for (String serverName : VCBungee.servers) {
+                        moneyList.put(serverName, 0.0);
+                        userdataMap.put(serverName, new HashMap<String, String>());
+                    }
                 }
+                UserReadyThread.addReadyUser(NetworkUser.this);
             }
         });
     }
@@ -118,8 +132,12 @@ public class NetworkUser {
         return onlineServer;
     }
 
-    public boolean isInUse() {
-        return inUse;
+    public String getUuid() {
+        return uuid;
+    }
+
+    public boolean isDisconnected() {
+        return disconnected;
     }
 
     public void setGroup(int group) {
@@ -166,8 +184,34 @@ public class NetworkUser {
         this.onlineServer = onlineServer;
     }
 
-    public void setInUse(boolean inUse) {
-        this.inUse = inUse;
+    public void setDisconnected(boolean disconnected) {
+        this.disconnected = disconnected;
+    }
+
+    public void save() {
+        ProxyServer.getInstance().getScheduler().runAsync(VCBungee.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", getUuid()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", getUuid());
+                dbObject.put("UUID", getUuid());
+                dbObject.put("Group", getGroup());
+                dbObject.put("Banned", isBanned());
+                dbObject.put("TempBan", getTempBan());
+                dbObject.put("Muted", isMuted());
+                dbObject.put("TempMute", getTempMute());
+                for (String serverName : VCBungee.servers) {
+                    dbObject.put(serverName + "-Money", getMoney(serverName));
+                    dbObject.put(serverName + "-UserData", dataToString(getUserdata(serverName)));
+                }
+                dbObject.put("Tokens", getTokens());
+                dbObject.put("Global-UserData", dataToString(getGlobalUserdata()));
+                DBObject dbObject1 = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", getUuid());
+                if (dbObject1 == null)
+                    VCBungee.getInstance().getMongoDB().insert("VaultCraft", "Users", dbObject);
+                else
+                    VCBungee.getInstance().getMongoDB().update("VaultCraft", "Users", dbObject1, dbObject);
+            }
+        });
     }
 
     public static void remove(final ProxiedPlayer player) {
@@ -175,8 +219,8 @@ public class NetworkUser {
         ProxyServer.getInstance().getScheduler().runAsync(VCBungee.getInstance(), new Runnable() {
             @Override
             public void run() {
-                DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
-                dbObject.put("UUID", player.getUniqueId().toString());
+                DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid());
+                dbObject.put("UUID", user.getUuid());
                 dbObject.put("Group", user.getGroup());
                 dbObject.put("Banned", user.isBanned());
                 dbObject.put("TempBan", user.getTempBan());
@@ -188,7 +232,7 @@ public class NetworkUser {
                 }
                 dbObject.put("Tokens", user.getTokens());
                 dbObject.put("Global-UserData", dataToString(user.getGlobalUserdata()));
-                DBObject dbObject1 = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", player.getUniqueId().toString());
+                DBObject dbObject1 = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid());
                 if (dbObject1 == null)
                     VCBungee.getInstance().getMongoDB().insert("VaultCraft", "Users", dbObject);
                 else
@@ -199,21 +243,21 @@ public class NetworkUser {
     }
 
     public static void disable() {
-        for(NetworkUser user : async_player_map.values()) {
-            DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
-            dbObject.put("UUID", user.getPlayer().getUniqueId().toString());
+        for (NetworkUser user : async_player_map.values()) {
+            DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid());
+            dbObject.put("UUID", user.getUuid());
             dbObject.put("Group", user.getGroup());
             dbObject.put("Banned", user.isBanned());
             dbObject.put("TempBan", user.getTempBan());
             dbObject.put("Muted", user.isMuted());
             dbObject.put("TempMute", user.getTempMute());
-            for(String serverName : VCBungee.servers) {
+            for (String serverName : VCBungee.servers) {
                 dbObject.put(serverName + "-Money", user.getMoney(serverName));
                 dbObject.put(serverName + "-UserData", dataToString(user.getUserdata(serverName)));
             }
             dbObject.put("Tokens", user.getTokens());
             dbObject.put("Global-UserData", dataToString(user.getGlobalUserdata()));
-            DBObject dbObject1 = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getPlayer().getUniqueId().toString());
+            DBObject dbObject1 = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid());
             if (dbObject1 == null)
                 VCBungee.getInstance().getMongoDB().insert("VaultCraft", "Users", dbObject);
             else
