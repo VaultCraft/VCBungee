@@ -12,6 +12,7 @@ import net.vaultcraft.vcbungee.network.ServerMessageHandler;
 import net.vaultcraft.vcbungee.user.NetworkUser;
 import net.vaultcraft.vcbungee.user.UserReadyThread;
 import net.vaultcraft.vcbungee.vote.Votifier;
+import net.vaultcraft.vcbungee.vote.model.listeners.BasicVoteListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,6 +72,7 @@ public class VCBungee extends Plugin {
 
         Votifier votifier = new Votifier();
         votifier.onEnable();
+        Votifier.registerListener(new BasicVoteListener());
 
         try {
             mongoDB = new MongoDB(MongoInfo.host, MongoInfo.port);

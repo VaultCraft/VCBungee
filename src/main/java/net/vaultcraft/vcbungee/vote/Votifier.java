@@ -18,6 +18,7 @@
 
 package net.vaultcraft.vcbungee.vote;
 
+import net.md_5.bungee.api.ProxyServer;
 import net.vaultcraft.vcbungee.VCBungee;
 import net.vaultcraft.vcbungee.config.ClassConfig;
 import net.vaultcraft.vcbungee.vote.crypto.RSAIO;
@@ -37,16 +38,24 @@ import java.util.List;
  */
 public class Votifier {
 
-    /** The Votifier instance. */
+    /**
+     * The Votifier instance.
+     */
     private static Votifier instance;
 
-    /** The vote listeners. */
+    /**
+     * The vote listeners.
+     */
     private final List<VoteListener> listeners = new ArrayList<VoteListener>();
 
-    /** The vote receiver. */
+    /**
+     * The vote receiver.
+     */
     private VoteReceiver voteReceiver;
 
-    /** The RSA key pair. */
+    /**
+     * The RSA key pair.
+     */
     private KeyPair keyPair;
 
     @ClassConfig.Config(path = "votes.host")
@@ -54,7 +63,7 @@ public class Votifier {
     @ClassConfig.Config(path = "votes.port")
     public static int _hostPort = 8192;
     @ClassConfig.Config(path = "votes.debug")
-    public static  boolean _debug = false;
+    public static boolean _debug = false;
     @ClassConfig.Config(path = "votes.listener_folder")
     public static String _listenerDirectory;
 
@@ -68,7 +77,7 @@ public class Votifier {
                     .replace("\\", "/") + "/listeners";
 
 		/*
-		 * Create RSA directory and keys if it does not exist; otherwise, read
+         * Create RSA directory and keys if it does not exist; otherwise, read
 		 * keys.
 		 */
         try {
@@ -88,15 +97,18 @@ public class Votifier {
         if (_debug)
             System.out.println("DEBUG mode enabled!");
 
-        try {
-            voteReceiver = new VoteReceiver(this, _hostAddress, _hostPort);
-            voteReceiver.start();
-
-            System.out.println("Voting enabled!");
-        } catch (Exception ex) {
-            gracefulExit();
-            return;
-        }
+        ProxyServer.getInstance().getScheduler().runAsync(VCBungee.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    voteReceiver = new VoteReceiver(Votifier.this, _hostAddress, _hostPort);
+                    voteReceiver.start();
+                    System.out.println("Voting enabled!");
+                } catch (Exception e) {
+                    gracefulExit();
+                }
+            }
+        });
     }
 
     public void onDisable() {

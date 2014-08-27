@@ -18,10 +18,10 @@
 
 package net.vaultcraft.vcbungee.vote.model.listeners;
 
+import common.network.PacketOutVote;
+import net.vaultcraft.vcbungee.network.ServerMessageHandler;
 import net.vaultcraft.vcbungee.vote.model.Vote;
 import net.vaultcraft.vcbungee.vote.model.VoteListener;
-
-import java.util.logging.Logger;
 
 /**
  * A basic vote listener for demonstration purposes.
@@ -30,11 +30,8 @@ import java.util.logging.Logger;
  */
 public class BasicVoteListener implements VoteListener {
 
-	/** The logger instance. */
-	private Logger log = Logger.getLogger("BasicVoteListener");
-
 	public void voteMade(Vote vote) {
-		log.info("Received: " + vote);
+        ServerMessageHandler.sendPacketToAll(null, new PacketOutVote(vote.getUsername()));
 	}
 
 }
