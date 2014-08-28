@@ -1,6 +1,6 @@
 package common.network;
 
-import java.net.Socket;
+import io.netty.channel.ChannelHandlerContext;
 
 /**
  * Created by tacticalsk8er on 8/18/2014.
@@ -8,5 +8,5 @@ import java.net.Socket;
 public interface Packet<T>{
     public T getType();
 
-    public void run(Socket socket, String clientName);
+    public void run(ChannelHandlerContext chx, String clientName);
 }

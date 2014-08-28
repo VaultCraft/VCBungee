@@ -3,7 +3,7 @@ package net.vaultcraft.vcbungee.user;
 import common.network.PacketOutUserGet;
 import common.network.UserInfo;
 import net.md_5.bungee.api.ProxyServer;
-import net.vaultcraft.vcbungee.network.ServerMessageHandler;
+import net.vaultcraft.vcbungee.network.MessageServer;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +26,7 @@ public class UserReadyThread implements Runnable {
                     if (!user.getUuid().equals(parts[0]))
                         continue;
                     UserInfo userInfo = new UserInfo(parts[1], user.getUuid());
-                    ServerMessageHandler.sendPacket(parts[2], new PacketOutUserGet(user.getUuid(), userInfo));
+                    MessageServer.sendPacket(parts[2], new PacketOutUserGet(user.getUuid(), userInfo));
                     readyUsers.remove(userUUID);
                     waitingList.remove(uuid);
                 }

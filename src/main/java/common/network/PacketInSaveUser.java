@@ -1,11 +1,13 @@
 package common.network;
 
-import java.net.Socket;
+import io.netty.channel.ChannelHandlerContext;
+
+import java.io.Serializable;
 
 /**
  * Created by tacticalsk8er on 8/22/2014.
  */
-public class PacketInSaveUser implements Packet {
+public class PacketInSaveUser implements Packet, Serializable {
 
     private UserInfo userInfo;
     private String uuid;
@@ -23,7 +25,7 @@ public class PacketInSaveUser implements Packet {
     }
 
     @Override
-    public void run(Socket socket, String clientName) {
+    public void run(ChannelHandlerContext chx, String clientName) {
         userInfo.saveUser(uuid, serverName);
     }
 }
