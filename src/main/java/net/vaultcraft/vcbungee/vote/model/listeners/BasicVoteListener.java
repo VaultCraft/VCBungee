@@ -19,7 +19,7 @@
 package net.vaultcraft.vcbungee.vote.model.listeners;
 
 import common.network.PacketOutVote;
-import net.vaultcraft.vcbungee.network.ServerMessageHandler;
+import net.vaultcraft.vcbungee.network.MessageServer;
 import net.vaultcraft.vcbungee.vote.model.Vote;
 import net.vaultcraft.vcbungee.vote.model.VoteListener;
 
@@ -31,7 +31,7 @@ import net.vaultcraft.vcbungee.vote.model.VoteListener;
 public class BasicVoteListener implements VoteListener {
 
 	public void voteMade(Vote vote) {
-        ServerMessageHandler.sendPacketToAll(null, new PacketOutVote(vote.getUsername()));
+        MessageServer.sendPacketToAll(null, new PacketOutVote(vote.getUsername()));
 	}
 
 }

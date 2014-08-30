@@ -1,9 +1,9 @@
 package common.network;
 
+import io.netty.channel.ChannelHandlerContext;
 import net.vaultcraft.vcbungee.user.UserReadyThread;
 
 import java.io.Serializable;
-import java.net.Socket;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
@@ -24,7 +24,7 @@ public class PacketInUserGet implements Packet, Serializable {
     }
 
     @Override
-    public void run(Socket socket, String clientName) {
+    public void run(ChannelHandlerContext chx, String clientName) {
         UserReadyThread.addWaiting(uuid + " " + serverName + " " + clientName);
     }
 }

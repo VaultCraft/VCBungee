@@ -1,10 +1,10 @@
 package common.network;
 
-import net.vaultcraft.vcbungee.network.ServerMessageHandler;
+import io.netty.channel.ChannelHandlerContext;
+import net.vaultcraft.vcbungee.network.MessageServer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
-import java.net.Socket;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
@@ -29,9 +29,9 @@ public class PacketInSendAll implements Packet, Serializable {
     }
 
     @Override
-    public void run(Socket socket, String clientName) {
+    public void run(ChannelHandlerContext chx, String clientName) {
         PacketOutSend packetOutSend = new PacketOutSend(this);
-        ServerMessageHandler.sendPacketToAll(socket, packetOutSend);
+        MessageServer.sendPacketToAll(clientName, packetOutSend);
     }
 
     public String getChannel() {

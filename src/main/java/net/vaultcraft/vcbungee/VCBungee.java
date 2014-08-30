@@ -8,7 +8,7 @@ import net.vaultcraft.vcbungee.config.ClassConfig;
 import net.vaultcraft.vcbungee.database.mongo.MongoDB;
 import net.vaultcraft.vcbungee.database.mongo.MongoInfo;
 import net.vaultcraft.vcbungee.listeners.BungeeListener;
-import net.vaultcraft.vcbungee.network.ServerMessageHandler;
+import net.vaultcraft.vcbungee.network.MessageServer;
 import net.vaultcraft.vcbungee.user.NetworkUser;
 import net.vaultcraft.vcbungee.user.UserReadyThread;
 import net.vaultcraft.vcbungee.vote.Votifier;
@@ -33,7 +33,6 @@ public class VCBungee extends Plugin {
 
     private static VCBungee instance;
     private Configuration configuration;
-    private ServerMessageHandler server;
     private MongoDB mongoDB;
 
     @Override
@@ -67,7 +66,11 @@ public class VCBungee extends Plugin {
 
         this.saveConfig();
 
-        server = new ServerMessageHandler(port);
+        try {
+            new MessageServer(VCBungee.port).init();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         new BungeeListener();
 
         Votifier votifier = new Votifier();
@@ -88,7 +91,7 @@ public class VCBungee extends Plugin {
         Votifier.getInstance().onDisable();
 
         NetworkUser.disable();
-        server.close();
+        MessageServer.close();
         mongoDB.close();
     }
 
@@ -110,9 +113,5 @@ public class VCBungee extends Plugin {
 
     public MongoDB getMongoDB() {
         return mongoDB;
-    }
-
-    public ServerMessageHandler getServer() {
-        return server;
     }
 }
