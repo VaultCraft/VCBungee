@@ -1,5 +1,6 @@
 package common.network;
 
+import net.vaultcraft.vcbungee.user.Group;
 import net.vaultcraft.vcbungee.user.NetworkUser;
 import net.vaultcraft.vcbungee.user.UserReadyThread;
 
@@ -26,7 +27,7 @@ public class UserInfo implements Serializable{
 
     public UserInfo(String serverName, String uuid) {
         NetworkUser user = NetworkUser.fromUUID(uuid);
-        this.group = user.getGroup();
+        this.group = user.getGroup().getPermLevel();
         this.banned = user.isBanned();
         this.tempBan = user.getTempBan();
         this.muted = user.isMuted();
@@ -39,7 +40,7 @@ public class UserInfo implements Serializable{
 
     public void updateUser(String uuid, String serverName) {
         NetworkUser user = NetworkUser.fromUUID(uuid);
-        user.setGroup(group);
+        user.setGroup(Group.fromPermLevel(group));
         user.setBanned(banned);
         user.setTempBan(tempBan);
         user.setMuted(muted);
@@ -56,7 +57,7 @@ public class UserInfo implements Serializable{
 
     public void saveUser(String uuid, String serverName) {
         NetworkUser user = NetworkUser.fromUUID(uuid);
-        user.setGroup(group);
+        user.setGroup(Group.fromPermLevel(group));
         user.setBanned(banned);
         user.setTempBan(tempBan);
         user.setMuted(muted);

@@ -1,4 +1,4 @@
-package com.vexsoftware.votifier;
+package net.vaultcraft.vcbungee.vote;
 
 import java.util.logging.*;
 
@@ -8,7 +8,7 @@ import java.util.logging.*;
  * @author frelling
  *
  */
-class LogFilter implements Filter {
+public class LogFilter implements Filter {
 
     private String prefix;
 

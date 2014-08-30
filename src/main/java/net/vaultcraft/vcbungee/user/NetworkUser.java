@@ -34,7 +34,7 @@ public class NetworkUser {
     private String uuid;
     private boolean disconnected = false;
 
-    private int group = 1;
+    private Group group = Group.COMMON;
     private boolean banned = false;
     private Date tempBan = null;
     private boolean muted = false;
@@ -61,7 +61,7 @@ public class NetworkUser {
             public void run() {
                 DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", uuid);
                 if (dbObject != null) {
-                    group = dbObject.get("Group") == null ? 1 : (Integer) dbObject.get("Group");
+                    group = Group.fromPermLevel(dbObject.get("Group") == null ? 1 : (Integer) dbObject.get("Group"));
                     banned = dbObject.get("Banned") == null ? false : (Boolean) dbObject.get("Banned");
                     tempBan = (Date) dbObject.get("TempBan");
                     muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
@@ -92,7 +92,7 @@ public class NetworkUser {
         return player;
     }
 
-    public int getGroup() {
+    public Group getGroup() {
         return group;
     }
 
@@ -140,7 +140,7 @@ public class NetworkUser {
         return disconnected;
     }
 
-    public void setGroup(int group) {
+    public void setGroup(Group group) {
         this.group = group;
     }
 
