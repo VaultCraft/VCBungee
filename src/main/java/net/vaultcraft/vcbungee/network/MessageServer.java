@@ -1,6 +1,7 @@
 package net.vaultcraft.vcbungee.network;
 
 import common.network.Packet;
+import common.network.PacketOutEnd;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -96,6 +97,7 @@ public class MessageServer {
     }
 
     public static void close() {
+        sendPacketToAll("", new PacketOutEnd());
         future.channel().closeFuture();
         for (String s : channelNames.keySet())
             closeChannel(s);
