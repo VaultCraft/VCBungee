@@ -24,5 +24,8 @@ public class ServerCommand extends Command {
         }
 
         NetworkUser user = NetworkUser.fromPlayer((ProxiedPlayer)commandSender);
+
+        //Format
+        // &
     }
 }
