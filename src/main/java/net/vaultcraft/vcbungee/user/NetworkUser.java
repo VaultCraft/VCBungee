@@ -221,7 +221,7 @@ public class NetworkUser {
             public void run() {
                 DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid());
                 dbObject.put("UUID", user.getUuid());
-                dbObject.put("Group", user.getGroup());
+                dbObject.put("Group", user.getGroup().getPermLevel());
                 dbObject.put("Banned", user.isBanned());
                 dbObject.put("TempBan", user.getTempBan());
                 dbObject.put("Muted", user.isMuted());
@@ -246,7 +246,7 @@ public class NetworkUser {
         for (NetworkUser user : async_player_map.values()) {
             DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid());
             dbObject.put("UUID", user.getUuid());
-            dbObject.put("Group", user.getGroup());
+            dbObject.put("Group", user.getGroup().getPermLevel());
             dbObject.put("Banned", user.isBanned());
             dbObject.put("TempBan", user.getTempBan());
             dbObject.put("Muted", user.isMuted());
