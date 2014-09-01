@@ -20,16 +20,11 @@ public class MessageServerHandler extends ChannelInboundHandlerAdapter {
             if (!(msg instanceof PacketInStart))
                 return;
             PacketInStart packet = (PacketInStart) msg;
-            this.name = packet.getName();
+            this.name = packet.getName().toLowerCase();
             init = true;
         }
         ((Packet) msg).run(chx, name);
         ProxyServer.getInstance().getLogger().info("Packet received from: " + name);
-    }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext chx) {
-        close();
     }
 
     @Override
