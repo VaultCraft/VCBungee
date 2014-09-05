@@ -194,7 +194,7 @@ public class NetworkUser {
             public void run() {
                 DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", getUuid()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", getUuid());
                 dbObject.put("UUID", getUuid());
-                dbObject.put("Group", getGroup());
+                dbObject.put("Group", getGroup().getPermLevel());
                 dbObject.put("Banned", isBanned());
                 dbObject.put("TempBan", getTempBan());
                 dbObject.put("Muted", isMuted());
