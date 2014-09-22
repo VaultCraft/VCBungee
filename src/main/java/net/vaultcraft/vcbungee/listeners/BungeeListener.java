@@ -35,10 +35,10 @@ public class BungeeListener implements Listener {
         String name = event.getPlayer().getName();
         String ip = getIp(event.getPlayer().getAddress().getAddress()).replace(".", "_");
 
-        if (VCBungee.getInstance().getConfig().get("user."+ip) != null)
+        if (VCBungee.getInstance().getConfig().get("user." + ip) != null)
             return;
 
-        VCBungee.getInstance().getConfig().set("user."+ip, name);
+        VCBungee.getInstance().getConfig().set("user." + ip, name);
         VCBungee.getInstance().saveConfig();
     }
 
@@ -53,25 +53,25 @@ public class BungeeListener implements Listener {
         String playerName = "MHF_Question";
 
         String ip = getIp(event.getConnection().getAddress().getAddress()).replace(".", "_");
-        if (conf.get("user."+ip) != null)
-            playerName = conf.getString("user."+ip);
+        if (conf.get("user." + ip) != null)
+            playerName = conf.getString("user." + ip);
 
-        URL url = new URL("https://minotar.net/avatar/"+playerName+"/64.png");
+        URL url = new URL("https://minotar.net/avatar/" + playerName + "/64.png");
 
         BufferedImage img = ImageIO.read(url);
 
         ServerPing respond = event.getResponse();
         respond.setFavicon(Favicon.create(img));
-        respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&5&lWelcome &7"+(playerName.equals("MHF_Question") ? "New Player" : playerName)+" &5&lto &7VaultCraft"));
+        respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&5&lWelcome &7" + (playerName.equals("MHF_Question") ? "New Player" : playerName) + " &5&lto &7VaultCraft"));
     }
 
     private static String getIp(InetAddress address) {
         byte[] arr = address.getAddress();
         String build = "";
         for (byte b : arr) {
-            build+=b+".";
+            build += b + ".";
         }
 
-        return build.hashCode()+"";
+        return build.hashCode() + "";
     }
 }
