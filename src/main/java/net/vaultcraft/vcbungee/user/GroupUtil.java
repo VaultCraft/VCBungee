@@ -21,7 +21,7 @@ public class GroupUtil {
         SKELETON(4, true),
         SLIME(3, true),
         WOLF(2, true),
-        COMMOM(1, false);
+        COMMON(1, false);
 
         private int perm;
         private boolean isDonorRank;

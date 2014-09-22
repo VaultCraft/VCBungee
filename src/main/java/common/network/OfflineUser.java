@@ -8,14 +8,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by tacticalsk8er on 9/8/2014.
  */
 public class OfflineUser implements Serializable{
 
-    private List<Integer> groups = new ArrayList<>();
+    private ArrayList groups = new ArrayList<>();
     private boolean banned = false;
     private Date tempBan = null;
     private boolean muted = false;
@@ -50,7 +49,7 @@ public class OfflineUser implements Serializable{
         this.userdata = user.getUserdata(serverName);
     }
 
-    public List<Integer> getGroups() {
+    public ArrayList getGroups() {
         return groups;
     }
 
@@ -86,7 +85,7 @@ public class OfflineUser implements Serializable{
         return userdata;
     }
 
-    public void setGroups(List<Integer> groups) {
+    public void setGroups(ArrayList groups) {
         this.groups = groups;
     }
 

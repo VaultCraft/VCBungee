@@ -32,7 +32,7 @@ public class NetworkUser {
     private String uuid;
     private boolean disconnected = false;
 
-    private List<Integer> groups = new ArrayList<>();
+    private ArrayList groups = new ArrayList<>();
     private boolean banned = false;
     private Date tempBan = null;
     private boolean muted = false;
@@ -59,7 +59,7 @@ public class NetworkUser {
             public void run() {
                 DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", uuid);
                 if (dbObject != null) {
-                    groups = dbObject.get("Group") == null ? new ArrayList<>(Arrays.asList(1)) : (List<Integer>) dbObject.get("Group");
+                    groups = dbObject.get("Group") == null ? new ArrayList<>(Arrays.asList(1)) : (ArrayList) dbObject.get("Group");
                     banned = dbObject.get("Banned") == null ? false : (Boolean) dbObject.get("Banned");
                     tempBan = (Date) dbObject.get("TempBan");
                     muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
@@ -90,7 +90,7 @@ public class NetworkUser {
         return player;
     }
 
-    public List<Integer> getGroups() {
+    public ArrayList getGroups() {
         return groups;
     }
 
@@ -138,7 +138,7 @@ public class NetworkUser {
         return disconnected;
     }
 
-    public void setGroups(List<Integer> groups) {
+    public void setGroups(ArrayList groups) {
         this.groups = groups;
     }
 
