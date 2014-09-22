@@ -1,5 +1,6 @@
 package net.vaultcraft.vcbungee.user;
 
+import com.google.common.collect.Lists;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import net.md_5.bungee.api.ProxyServer;
@@ -32,7 +33,7 @@ public class NetworkUser {
     private String uuid;
     private boolean disconnected = false;
 
-    private ArrayList groups = new ArrayList<>();
+    private ArrayList<Integer> groups = new ArrayList<Integer>();
     private boolean banned = false;
     private Date tempBan = null;
     private boolean muted = false;
@@ -59,7 +60,11 @@ public class NetworkUser {
             public void run() {
                 DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", uuid);
                 if (dbObject != null) {
-                    groups = dbObject.get("Group") == null ? new ArrayList<>(Arrays.asList(1)) : (ArrayList) dbObject.get("Group");
+                    ArrayList groups = dbObject.get("Group") == null ? new ArrayList<>(Arrays.asList(1)) : (ArrayList) dbObject.get("Group");
+                    NetworkUser.this.groups = Lists.newArrayList();
+                    for (Object obj : groups) {
+                        NetworkUser.this.groups.add((Integer)obj);
+                    }
                     banned = dbObject.get("Banned") == null ? false : (Boolean) dbObject.get("Banned");
                     tempBan = (Date) dbObject.get("TempBan");
                     muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
@@ -90,7 +95,7 @@ public class NetworkUser {
         return player;
     }
 
-    public ArrayList getGroups() {
+    public ArrayList<Integer> getGroups() {
         return groups;
     }
 
