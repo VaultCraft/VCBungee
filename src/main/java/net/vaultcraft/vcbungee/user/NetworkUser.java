@@ -32,7 +32,7 @@ public class NetworkUser {
     private String uuid;
     private boolean disconnected = false;
 
-    private ArrayList groups = new ArrayList<>();
+    private List<Integer> groups = new ArrayList<>();
     private boolean banned = false;
     private Date tempBan = null;
     private boolean muted = false;
@@ -59,7 +59,8 @@ public class NetworkUser {
             public void run() {
                 DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", uuid);
                 if (dbObject != null) {
-                    groups = dbObject.get("Group") == null ? new ArrayList<>(Arrays.asList(1)) : (ArrayList) dbObject.get("Group");
+                    String groupList = dbObject.get("Group") == null ? "1" : (String) dbObject.get("Group");
+                    groups = parseGroups(groupList);
                     banned = dbObject.get("Banned") == null ? false : (Boolean) dbObject.get("Banned");
                     tempBan = (Date) dbObject.get("TempBan");
                     muted = dbObject.get("Muted") == null ? false : (Boolean) dbObject.get("Muted");
@@ -90,7 +91,7 @@ public class NetworkUser {
         return player;
     }
 
-    public ArrayList getGroups() {
+    public List<Integer> getGroups() {
         return groups;
     }
 
@@ -138,7 +139,7 @@ public class NetworkUser {
         return disconnected;
     }
 
-    public void setGroups(ArrayList groups) {
+    public void setGroups(List<Integer> groups) {
         this.groups = groups;
     }
 
@@ -192,7 +193,7 @@ public class NetworkUser {
             public void run() {
                 DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", getUuid()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", getUuid());
                 dbObject.put("UUID", getUuid());
-                dbObject.put("Group", getGroups());
+                dbObject.put("Group", groupsToString(getGroups()));
                 dbObject.put("Banned", isBanned());
                 dbObject.put("TempBan", getTempBan());
                 dbObject.put("Muted", isMuted());
@@ -219,7 +220,7 @@ public class NetworkUser {
             public void run() {
                 DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid());
                 dbObject.put("UUID", user.getUuid());
-                dbObject.put("Group", user.getGroups());
+                dbObject.put("Group", groupsToString(user.getGroups()));
                 dbObject.put("Banned", user.isBanned());
                 dbObject.put("TempBan", user.getTempBan());
                 dbObject.put("Muted", user.isMuted());
@@ -244,7 +245,7 @@ public class NetworkUser {
         for (NetworkUser user : async_player_map.values()) {
             DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid());
             dbObject.put("UUID", user.getUuid());
-            dbObject.put("Group", user.getGroups());
+            dbObject.put("Group", groupsToString(user.getGroups()));
             dbObject.put("Banned", user.isBanned());
             dbObject.put("TempBan", user.getTempBan());
             dbObject.put("Muted", user.isMuted());
@@ -290,5 +291,28 @@ public class NetworkUser {
             userdata.put(parts[0], parts[1]);
         }
         return userdata;
+    }
+
+    private static List<Integer> parseGroups(String s) {
+        List<Integer> groups = new ArrayList<>();
+        String[] parts = s.split(",");
+        for(String part : parts) {
+            try {
+                groups.add(Integer.parseInt(part));
+            } catch(NumberFormatException ignored) {
+            }
+        }
+        return groups;
+    }
+
+    private static String groupsToString(List<Integer> groups) {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < groups.size(); i++) {
+            if(i + 1 == groups.size())
+                sb.append(groups.get(i));
+            else
+                sb.append(groups.get(i)).append(",");
+        }
+        return sb.toString();
     }
 }
