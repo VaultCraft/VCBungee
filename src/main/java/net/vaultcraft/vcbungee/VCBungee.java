@@ -4,6 +4,8 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import net.vaultcraft.vcbungee.commands.RebootCommand;
+import net.vaultcraft.vcbungee.commands.SendVoteCommand;
 import net.vaultcraft.vcbungee.config.ClassConfig;
 import net.vaultcraft.vcbungee.database.mongo.MongoDB;
 import net.vaultcraft.vcbungee.database.mongo.MongoInfo;
@@ -56,6 +58,9 @@ public class VCBungee extends Plugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        getProxy().getPluginManager().registerCommand(this, new RebootCommand("reboot"));
+        getProxy().getPluginManager().registerCommand(this, new SendVoteCommand("sendvote"));
 
         ClassConfig.loadConfig(MongoInfo.class, configuration);
         ClassConfig.loadConfig(this.getClass(), configuration);

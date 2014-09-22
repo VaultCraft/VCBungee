@@ -29,9 +29,7 @@ import net.vaultcraft.vcbungee.vote.model.VoteListener;
  * @author Blake Beaupain
  */
 public class BasicVoteListener implements VoteListener {
-
 	public void voteMade(Vote vote) {
         MessageServer.sendPacketToAll(null, new PacketOutVote(vote.getUsername()));
 	}
-
 }

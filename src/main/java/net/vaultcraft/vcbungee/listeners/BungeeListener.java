@@ -14,7 +14,6 @@ import net.vaultcraft.vcbungee.VCBungee;
 import net.vaultcraft.vcbungee.user.NetworkUser;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.InetAddress;

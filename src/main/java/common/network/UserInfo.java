@@ -11,7 +11,7 @@ import java.util.HashMap;
 /**
  * Created by tacticalsk8er on 8/19/2014.
  */
-public class UserInfo implements Serializable{
+public class UserInfo implements Serializable {
 
     private int group = 1;
     private boolean banned = false;

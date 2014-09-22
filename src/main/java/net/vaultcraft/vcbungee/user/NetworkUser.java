@@ -194,7 +194,7 @@ public class NetworkUser {
             public void run() {
                 DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", getUuid()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", getUuid());
                 dbObject.put("UUID", getUuid());
-                dbObject.put("Group", getGroup());
+                dbObject.put("Group", getGroup().getPermLevel());
                 dbObject.put("Banned", isBanned());
                 dbObject.put("TempBan", getTempBan());
                 dbObject.put("Muted", isMuted());
@@ -221,7 +221,7 @@ public class NetworkUser {
             public void run() {
                 DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid());
                 dbObject.put("UUID", user.getUuid());
-                dbObject.put("Group", user.getGroup());
+                dbObject.put("Group", user.getGroup().getPermLevel());
                 dbObject.put("Banned", user.isBanned());
                 dbObject.put("TempBan", user.getTempBan());
                 dbObject.put("Muted", user.isMuted());
@@ -246,7 +246,7 @@ public class NetworkUser {
         for (NetworkUser user : async_player_map.values()) {
             DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid()) == null ? new BasicDBObject() : VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", user.getUuid());
             dbObject.put("UUID", user.getUuid());
-            dbObject.put("Group", user.getGroup());
+            dbObject.put("Group", user.getGroup().getPermLevel());
             dbObject.put("Banned", user.isBanned());
             dbObject.put("TempBan", user.getTempBan());
             dbObject.put("Muted", user.isMuted());
@@ -269,9 +269,9 @@ public class NetworkUser {
         StringBuilder sb = new StringBuilder();
         int counter = 0;
         for (Map.Entry entry : userdata.entrySet()) {
-            sb.append(entry.getKey()).append(":").append(entry.getValue());
+            sb.append(entry.getKey()).append("▲").append(entry.getValue());
             if (userdata.size() - 1 != counter)
-                sb.append(",");
+                sb.append("▼");
             counter++;
         }
         return sb.toString();
@@ -279,16 +279,16 @@ public class NetworkUser {
 
     private static HashMap<String, String> parseData(String data) {
         HashMap<String, String> userdata = new HashMap<>();
-        if (!(data.contains(":")))
+        if (!(data.contains("▲")))
             return userdata;
-        if(data.contains(",")) {
-            String[] parts = data.split(",");
+        if(data.contains("▼")) {
+            String[] parts = data.split("▼");
             for (String s : parts) {
-                String[] entry = s.split(":");
+                String[] entry = s.split("▲");
                 userdata.put(entry[0], entry[1]);
             }
         } else {
-            String[] parts = data.split(":");
+            String[] parts = data.split("▲");
             userdata.put(parts[0], parts[1]);
         }
         return userdata;
