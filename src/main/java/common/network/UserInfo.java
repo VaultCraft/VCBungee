@@ -1,19 +1,20 @@
 package common.network;
 
-import net.vaultcraft.vcbungee.user.Group;
 import net.vaultcraft.vcbungee.user.NetworkUser;
 import net.vaultcraft.vcbungee.user.UserReadyThread;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
  */
 public class UserInfo implements Serializable{
 
-    private int group = 1;
+    private List<Integer> groups = new ArrayList<>();
     private boolean banned = false;
     private Date tempBan = null;
     private boolean muted = false;
@@ -27,7 +28,7 @@ public class UserInfo implements Serializable{
 
     public UserInfo(String serverName, String uuid) {
         NetworkUser user = NetworkUser.fromUUID(uuid);
-        this.group = user.getGroup().getPermLevel();
+        this.groups = user.getGroups();
         this.banned = user.isBanned();
         this.tempBan = user.getTempBan();
         this.muted = user.isMuted();
@@ -40,7 +41,7 @@ public class UserInfo implements Serializable{
 
     public void updateUser(String uuid, String serverName) {
         NetworkUser user = NetworkUser.fromUUID(uuid);
-        user.setGroup(Group.fromPermLevel(group));
+        user.setGroups(groups);
         user.setBanned(banned);
         user.setTempBan(tempBan);
         user.setMuted(muted);
@@ -57,7 +58,7 @@ public class UserInfo implements Serializable{
 
     public void saveUser(String uuid, String serverName) {
         NetworkUser user = NetworkUser.fromUUID(uuid);
-        user.setGroup(Group.fromPermLevel(group));
+        user.setGroups(groups);
         user.setBanned(banned);
         user.setTempBan(tempBan);
         user.setMuted(muted);
@@ -69,8 +70,8 @@ public class UserInfo implements Serializable{
         user.save();
     }
 
-    public int getGroup() {
-        return group;
+    public List<Integer> getGroups() {
+        return groups;
     }
 
     public boolean isBanned() {
