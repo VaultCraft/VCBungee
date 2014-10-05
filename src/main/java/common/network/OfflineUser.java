@@ -1,7 +1,5 @@
 package common.network;
 
-import net.md_5.bungee.api.ProxyServer;
-import net.vaultcraft.vcbungee.VCBungee;
 import net.vaultcraft.vcbungee.user.NetworkUser;
 
 import java.io.Serializable;
@@ -13,7 +11,7 @@ import java.util.List;
 /**
  * Created by tacticalsk8er on 9/8/2014.
  */
-public class OfflineUser implements Serializable{
+public class OfflineUser implements Serializable {
 
     private List<Integer> groups = new ArrayList<>();
     private boolean banned = false;
@@ -25,18 +23,13 @@ public class OfflineUser implements Serializable{
 
     private double money;
     private HashMap<String, String> globalUserdata = new HashMap<>();
-    private HashMap<String,String> userdata = new HashMap<>();
+    private HashMap<String, String> userdata = new HashMap<>();
 
 
-    public OfflineUser(String UUID, String serverName) {
+    public OfflineUser(final String UUID, final String serverName) {
         NetworkUser user = NetworkUser.fromUUID(UUID);
-        if(user == null) {
-            ProxyServer.getInstance().getScheduler().runAsync(VCBungee.getInstance(), new Runnable() {
-                @Override
-                public void run() {
-
-                }
-            });
+        if (user == null) {
+            
             return;
         }
         this.groups = user.getGroups();

@@ -3,7 +3,6 @@ package net.vaultcraft.vcbungee.user;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.vaultcraft.vcbungee.VCBungee;
 
@@ -49,7 +48,7 @@ public class NetworkUser {
         try {
             this.uuid = UUIDFetcher.getUUIDOf(player.getName()).toString();
         } catch (Exception e) {
-            player.disconnect(new TextComponent("Error in getting your UUID. Notify Admins."));
+            player.disconnect("Error in getting your UUID. Notify Admins.");
             e.printStackTrace();
         }
         async_player_map.put(player, this);
