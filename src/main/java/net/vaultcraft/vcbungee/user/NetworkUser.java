@@ -3,8 +3,10 @@ package net.vaultcraft.vcbungee.user;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.vaultcraft.vcbungee.VCBungee;
+import net.vaultcraft.vcbungee.commands.WhitelistCommand;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,7 +50,7 @@ public class NetworkUser {
         try {
             this.uuid = UUIDFetcher.getUUIDOf(player.getName()).toString();
         } catch (Exception e) {
-            player.disconnect("Error in getting your UUID. Notify Admins.");
+            player.disconnect(new TextComponent("Error in getting your UUID. Notify Admins."));
             e.printStackTrace();
         }
         async_player_map.put(player, this);
@@ -79,6 +81,12 @@ public class NetworkUser {
                     for (String serverName : VCBungee.servers) {
                         moneyList.put(serverName, 0.0);
                         userdataMap.put(serverName, new HashMap<String, String>());
+                    }
+                }
+                if(WhitelistCommand.isWhitelisted()) {
+                    if(!GroupUtil.hasPermission(groups, GroupUtil.Group.ADMIN)) {
+                        player.disconnect(new TextComponent("You are not whitelisted!"));
+                        return;
                     }
                 }
                 UserReadyThread.addReadyUser(NetworkUser.this);
