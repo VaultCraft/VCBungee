@@ -32,6 +32,7 @@ public class WhitelistCommand extends Command {
         }
 
         if(args.length == 0) {
+            commandSender.sendMessage(new TextComponent(ChatColor.BLUE + "Commands: add, remove, on , off."));
             return;
         }
 
@@ -47,6 +48,9 @@ public class WhitelistCommand extends Command {
                 break;
             case "off":
                 executeOff(commandSender);
+                break;
+            default:
+                commandSender.sendMessage(new TextComponent(ChatColor.BLUE + "Commands: add, remove, on , off."));
                 break;
         }
     }
