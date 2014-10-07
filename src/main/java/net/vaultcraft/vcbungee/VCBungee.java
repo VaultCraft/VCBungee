@@ -99,6 +99,7 @@ public class VCBungee extends Plugin {
 
         NetworkUser.disable();
         MessageServer.close();
+        WhitelistCommand.onDisable();
         mongoDB.close();
     }
 

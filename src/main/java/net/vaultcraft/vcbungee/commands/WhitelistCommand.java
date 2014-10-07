@@ -6,6 +6,8 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.vaultcraft.vcbungee.VCBungee;
+import net.vaultcraft.vcbungee.config.ClassConfig;
 import net.vaultcraft.vcbungee.user.GroupUtil;
 import net.vaultcraft.vcbungee.user.NetworkUser;
 import net.vaultcraft.vcbungee.user.UUIDFetcher;
@@ -18,12 +20,16 @@ import java.util.List;
  */
 public class WhitelistCommand extends Command {
 
-    private static boolean whitelisted = false;
-    private static boolean hardMode = false;
-    private static List<String> whitelist = new ArrayList<>();
+    @ClassConfig.Config(path = "Whitelist.Toggle")
+    public static boolean whitelisted = false;
+    @ClassConfig.Config(path = "Whitelist.HardMode")
+    public static boolean hardMode = false;
+    @ClassConfig.Config(path = "Whitelist.List")
+    public static List<String> whitelist = new ArrayList<>();
 
     public WhitelistCommand(String name) {
         super(name);
+        ClassConfig.loadConfig(this.getClass(), VCBungee.getInstance().getConfig());
     }
 
     @Override
@@ -55,8 +61,9 @@ public class WhitelistCommand extends Command {
                 break;
             case "soft":
                 executeSoft(commandSender);
+                break;
             default:
-                commandSender.sendMessage(new TextComponent(ChatColor.BLUE + "Commands: add, remove, on , off."));
+                commandSender.sendMessage(new TextComponent(ChatColor.BLUE + "Commands: add, remove, on , off, hard, and soft."));
                 break;
         }
     }
@@ -144,5 +151,10 @@ public class WhitelistCommand extends Command {
 
     public static List<String> getWhitelist() {
         return whitelist;
+    }
+
+    public static void onDisable() {
+        ClassConfig.updateConfig(WhitelistCommand.class, VCBungee.getInstance().getConfig());
+        VCBungee.getInstance().saveConfig();
     }
 }
