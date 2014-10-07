@@ -108,8 +108,13 @@ public class WhitelistCommand extends Command {
         whitelisted = true;
         commandSender.sendMessage(new TextComponent(ChatColor.GREEN + "Success: " + ChatColor.WHITE + "The whitelist is now on."));
         for(ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-            if(!GroupUtil.hasPermission(NetworkUser.fromPlayer(player).getGroups(),GroupUtil.Group.ADMIN)) {
+            NetworkUser user = NetworkUser.fromPlayer(player);
+            if(!GroupUtil.hasPermission(user.getGroups(), GroupUtil.Group.ADMIN) && WhitelistCommand.isHardMode() && !WhitelistCommand.getWhitelist().contains(user.getUuid())) {
                 player.disconnect(new TextComponent("You are not whitelisted!"));
+                return;
+            } else if(!GroupUtil.hasPermission(user.getGroups(), GroupUtil.Group.HELPER) && !WhitelistCommand.getWhitelist().contains(user.getUuid())) {
+                player.disconnect(new TextComponent("You are not whitelisted!"));
+                return;
             }
         }
     }
