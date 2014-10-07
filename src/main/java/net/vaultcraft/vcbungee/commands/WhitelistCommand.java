@@ -19,6 +19,7 @@ import java.util.List;
 public class WhitelistCommand extends Command {
 
     private static boolean whitelisted = false;
+    private static boolean hardMode = false;
     private static List<String> whitelist = new ArrayList<>();
 
     public WhitelistCommand(String name) {
@@ -32,7 +33,7 @@ public class WhitelistCommand extends Command {
         }
 
         if(args.length == 0) {
-            commandSender.sendMessage(new TextComponent(ChatColor.BLUE + "Commands: add, remove, on , off."));
+            commandSender.sendMessage(new TextComponent(ChatColor.BLUE + "Commands: add, remove, on , off, hard, and soft."));
             return;
         }
 
@@ -49,6 +50,11 @@ public class WhitelistCommand extends Command {
             case "off":
                 executeOff(commandSender);
                 break;
+            case "hard":
+                executeHard(commandSender);
+                break;
+            case "soft":
+                executeSoft(commandSender);
             default:
                 commandSender.sendMessage(new TextComponent(ChatColor.BLUE + "Commands: add, remove, on , off."));
                 break;
@@ -113,7 +119,25 @@ public class WhitelistCommand extends Command {
         commandSender.sendMessage(new TextComponent(ChatColor.GREEN + "Success: " + ChatColor.WHITE + "The whitelist is now off."));
     }
 
+    private void executeSoft(CommandSender commandSender) {
+        hardMode = false;
+        commandSender.sendMessage(new TextComponent(ChatColor.GREEN + "Success: " + ChatColor.WHITE + "The whitelist is now in soft mode."));
+    }
+
+    private void executeHard(CommandSender commandSender) {
+        hardMode = true;
+        commandSender.sendMessage(new TextComponent(ChatColor.GREEN + "Success: " + ChatColor.WHITE + "The whitelist is now in hard mode."));
+    }
+
     public static boolean isWhitelisted() {
         return whitelisted;
+    }
+
+    public static boolean isHardMode() {
+        return hardMode;
+    }
+
+    public static List<String> getWhitelist() {
+        return whitelist;
     }
 }
