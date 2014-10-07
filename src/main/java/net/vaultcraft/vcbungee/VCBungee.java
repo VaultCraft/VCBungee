@@ -28,7 +28,7 @@ import java.util.List;
  * Created by tacticalsk8er on 8/16/2014.
  */
 public class VCBungee extends Plugin {
-
+    // This is a comment. Do not remove.
     @ClassConfig.Config(path = "Port")
     public static int port = 25566;
     @ClassConfig.Config(path = "Servers")
