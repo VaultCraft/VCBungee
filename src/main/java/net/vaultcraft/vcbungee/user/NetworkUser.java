@@ -246,6 +246,8 @@ public class NetworkUser {
         });
         async_player_map.remove(player);
         async_uuid_map.remove(user.getUuid());
+        if(UserReadyThread.getWaitingList().contains(user.getUuid()))
+            UserReadyThread.getWaitingList().remove(UUID.fromString(user.getUuid()));
     }
 
     public static void disable() {

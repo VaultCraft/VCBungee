@@ -12,6 +12,7 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 import net.vaultcraft.vcbungee.VCBungee;
 import net.vaultcraft.vcbungee.user.NetworkUser;
+import net.vaultcraft.vcbungee.user.UUIDFetcher;
 import net.vaultcraft.vcbungee.user.UserReadyThread;
 
 import javax.imageio.ImageIO;
@@ -19,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
+import java.util.UUID;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
@@ -47,8 +49,15 @@ public class BungeeListener implements Listener {
     public void onLeave(PlayerDisconnectEvent event) {
         if(NetworkUser.fromPlayer(event.getPlayer()) != null)
             NetworkUser.fromPlayer(event.getPlayer()).setDisconnected(true);
-        if(UserReadyThread.getWaitingList().contains(event.getPlayer().getUniqueId()))
-            UserReadyThread.getWaitingList().remove(event.getPlayer().getUniqueId());
+        UUID uuid;
+        try {
+            uuid = UUIDFetcher.getUUIDOf(event.getPlayer().getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        if(UserReadyThread.getWaitingList().contains(uuid))
+            UserReadyThread.getWaitingList().remove(uuid);
     }
 
     @EventHandler
