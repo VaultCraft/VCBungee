@@ -50,10 +50,12 @@ public class UserInfo implements Serializable {
         user.setTokens(tokens);
         user.setGlobalUserdata(globalUserdata);
         user.setUserdata(serverName, userdata);
-        if(user.isDisconnected())
+        if(user.isDisconnected()) {
             NetworkUser.remove(user.getPlayer());
-        else
+        } else {
             UserReadyThread.addReadyUser(user);
+            user.save();
+        }
     }
 
     public void saveUser(String uuid, String serverName) {

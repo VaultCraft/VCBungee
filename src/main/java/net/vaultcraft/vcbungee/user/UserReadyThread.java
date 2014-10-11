@@ -43,4 +43,8 @@ public class UserReadyThread implements Runnable {
         ProxyServer.getInstance().getLogger().info("User added: " + user.getUuid());
         readyUsers.put(UUID.randomUUID(), user);
     }
+
+    public static ConcurrentHashMap<UUID, String> getWaitingList() {
+        return waitingList;
+    }
 }

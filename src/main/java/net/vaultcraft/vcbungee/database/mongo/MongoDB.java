@@ -25,12 +25,7 @@ public class MongoDB {
      * @throws UnknownHostException
      */
     public MongoDB(final String host, final int port) throws UnknownHostException {
-        ProxyServer.getInstance().getScheduler().schedule(VCBungee.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                client = new MongoClient(host, port);
-            }
-        }, 0, TimeUnit.MILLISECONDS);
+        ProxyServer.getInstance().getScheduler().schedule(VCBungee.getInstance(), () -> client = new MongoClient(host, port), 0, TimeUnit.MILLISECONDS);
     }
 
     /**
