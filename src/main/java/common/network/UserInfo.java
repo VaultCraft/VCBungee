@@ -40,6 +40,8 @@ public class UserInfo implements Serializable {
 
     public void updateUser(String uuid, String serverName) {
         NetworkUser user = NetworkUser.fromUUID(uuid);
+        if(user == null)
+            return;
         user.setGroups(groups);
         user.setBanned(banned);
         user.setTempBan(tempBan);
@@ -59,6 +61,8 @@ public class UserInfo implements Serializable {
 
     public void saveUser(String uuid, String serverName) {
         NetworkUser user = NetworkUser.fromUUID(uuid);
+        if(user == null)
+            return;
         user.setGroups(groups);
         user.setBanned(banned);
         user.setTempBan(tempBan);

@@ -36,6 +36,7 @@ public class MessageServerHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
         ctx.close();
+        close();
     }
 
     public void close() {
