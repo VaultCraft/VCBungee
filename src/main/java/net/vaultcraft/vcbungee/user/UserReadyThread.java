@@ -47,4 +47,8 @@ public class UserReadyThread implements Runnable {
     public static ConcurrentHashMap<UUID, String> getWaitingList() {
         return waitingList;
     }
+
+    public static ConcurrentHashMap<UUID, NetworkUser> getReadyUsers() {
+        return readyUsers;
+    }
 }
