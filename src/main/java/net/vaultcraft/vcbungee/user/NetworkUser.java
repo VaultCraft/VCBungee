@@ -91,6 +91,8 @@ public class NetworkUser {
                     player.disconnect(new TextComponent("You are not whitelisted!"));
                     UserReadyThread.addReadyUser(NetworkUser.this);
                     NetworkUser.remove(player);
+                } else {
+                    UserReadyThread.addReadyUser(NetworkUser.this);
                 }
             } else {
                 UserReadyThread.addReadyUser(NetworkUser.this);
