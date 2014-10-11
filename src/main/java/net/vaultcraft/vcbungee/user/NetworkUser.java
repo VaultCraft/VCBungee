@@ -92,6 +92,8 @@ public class NetworkUser {
                     UserReadyThread.addReadyUser(NetworkUser.this);
                     NetworkUser.remove(player);
                 }
+            } else {
+                UserReadyThread.addReadyUser(NetworkUser.this);
             }
 
         });
