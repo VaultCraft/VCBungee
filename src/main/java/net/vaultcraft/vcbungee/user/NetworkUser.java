@@ -86,14 +86,16 @@ public class NetworkUser {
                 if (!GroupUtil.hasPermission(groups, GroupUtil.Group.ADMIN) && WhitelistCommand.isHardMode() && !WhitelistCommand.getWhitelist().contains(uuid)) {
                     player.disconnect(new TextComponent("You are not whitelisted!"));
                     NetworkUser.remove(player);
-                    return;
                 } else if (!GroupUtil.hasPermission(groups, GroupUtil.Group.HELPER) && !WhitelistCommand.getWhitelist().contains(uuid)) {
                     player.disconnect(new TextComponent("You are not whitelisted!"));
                     NetworkUser.remove(player);
-                    return;
+                } else {
+                    UserReadyThread.addReadyUser(NetworkUser.this);
                 }
+            } else {
+                UserReadyThread.addReadyUser(NetworkUser.this);
             }
-            UserReadyThread.addReadyUser(NetworkUser.this);
+
         });
     }
 
