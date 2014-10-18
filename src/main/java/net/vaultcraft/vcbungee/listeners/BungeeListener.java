@@ -79,9 +79,9 @@ public class BungeeListener implements Listener {
         respond.setFavicon(Favicon.create(img));
         //respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&5&lWelcome &7" + (playerName.equals("MHF_Question") ? "New Player" : playerName) + " &5&lto &7VaultCraft"));
         if (release < System.currentTimeMillis())
-            respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&7-=&d*&7=- &5VaultCraft &d- &5ALPHA &7-=&d*&7=-                 &aWelcome!"));
+            respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&7-=&d*&7=- &5VaultCraft &d- &5ALPHA &7-=&d*&7=-                       &aWelcome!"));
         else
-            respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&7-=&d*&7=- &5VaultCraft &d- &5ALPHA &7-=&d*&7=-                " + HHMMSS(release - System.currentTimeMillis())));
+            respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&7-=&d*&7=- &5VaultCraft &d- &5ALPHA &7-=&d*&7=-                       " + HHMMSS(release - System.currentTimeMillis())));
     }
 
     private static String getIp(InetAddress address) {
