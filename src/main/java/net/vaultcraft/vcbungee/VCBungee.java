@@ -4,10 +4,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
-import net.vaultcraft.vcbungee.commands.RebootCommand;
-import net.vaultcraft.vcbungee.commands.SendVoteCommand;
-import net.vaultcraft.vcbungee.commands.ShoutCommand;
-import net.vaultcraft.vcbungee.commands.WhitelistCommand;
+import net.vaultcraft.vcbungee.commands.*;
 import net.vaultcraft.vcbungee.config.ClassConfig;
 import net.vaultcraft.vcbungee.database.mongo.MongoDB;
 import net.vaultcraft.vcbungee.database.mongo.MongoInfo;
@@ -65,6 +62,7 @@ public class VCBungee extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new SendVoteCommand("sendvote"));
         getProxy().getPluginManager().registerCommand(this, new ShoutCommand("shout"));
         getProxy().getPluginManager().registerCommand(this, new WhitelistCommand("whitelist"));
+        getProxy().getPluginManager().registerCommand(this, new SetReleaseTime("setrelease"));
 
         ClassConfig.loadConfig(MongoInfo.class, configuration);
         ClassConfig.loadConfig(this.getClass(), configuration);
