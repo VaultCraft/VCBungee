@@ -4,17 +4,14 @@ import net.vaultcraft.vcbungee.user.NetworkUser;
 import net.vaultcraft.vcbungee.user.UserReadyThread;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by tacticalsk8er on 8/19/2014.
  */
 public class UserInfo implements Serializable {
 
-    private List<Integer> groups = new ArrayList<>();
+    private List<Integer> groups = new ArrayList<>(Arrays.asList(1));
     private boolean banned = false;
     private Date tempBan = null;
     private boolean muted = false;
@@ -28,6 +25,8 @@ public class UserInfo implements Serializable {
 
     public UserInfo(String serverName, String uuid) {
         NetworkUser user = NetworkUser.fromUUID(uuid);
+        if(user == null)
+            return;
         this.groups = user.getGroups();
         this.banned = user.isBanned();
         this.tempBan = user.getTempBan();
@@ -41,6 +40,8 @@ public class UserInfo implements Serializable {
 
     public void updateUser(String uuid, String serverName) {
         NetworkUser user = NetworkUser.fromUUID(uuid);
+        if(user == null)
+            return;
         user.setGroups(groups);
         user.setBanned(banned);
         user.setTempBan(tempBan);
@@ -50,14 +51,18 @@ public class UserInfo implements Serializable {
         user.setTokens(tokens);
         user.setGlobalUserdata(globalUserdata);
         user.setUserdata(serverName, userdata);
-        if(user.isDisconnected())
+        if(user.isDisconnected()) {
             NetworkUser.remove(user.getPlayer());
-        else
+        } else {
             UserReadyThread.addReadyUser(user);
+            user.save();
+        }
     }
 
     public void saveUser(String uuid, String serverName) {
         NetworkUser user = NetworkUser.fromUUID(uuid);
+        if(user == null)
+            return;
         user.setGroups(groups);
         user.setBanned(banned);
         user.setTempBan(tempBan);

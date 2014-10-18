@@ -46,7 +46,7 @@ public class Votifier {
     /**
      * The vote listeners.
      */
-    private final List<VoteListener> listeners = new ArrayList<VoteListener>();
+    private final List<VoteListener> listeners = new ArrayList<>();
 
     /**
      * The vote receiver.
@@ -97,16 +97,13 @@ public class Votifier {
         if (_debug)
             System.out.println("DEBUG mode enabled!");
 
-        ProxyServer.getInstance().getScheduler().runAsync(VCBungee.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    voteReceiver = new VoteReceiver(Votifier.this, _hostAddress, _hostPort);
-                    voteReceiver.start();
-                    System.out.println("Voting enabled!");
-                } catch (Exception e) {
-                    gracefulExit();
-                }
+        ProxyServer.getInstance().getScheduler().runAsync(VCBungee.getInstance(), () -> {
+            try {
+                voteReceiver = new VoteReceiver(Votifier.this, _hostAddress, _hostPort);
+                voteReceiver.start();
+                System.out.println("Voting enabled!");
+            } catch (Exception e) {
+                gracefulExit();
             }
         });
     }

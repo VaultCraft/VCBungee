@@ -179,12 +179,7 @@ public class VoteReceiver extends Thread {
                 // Call event in a synchronized fashion to ensure that the
                 // custom event runs in the
                 // the main server thread, not this one.
-                ProxyServer.getInstance().getScheduler().schedule(VCBungee.getInstance(), new Runnable() {
-                    @Override
-                    public void run() {
-                        ProxyServer.getInstance().getPluginManager().callEvent(new VotifierEvent(vote));
-                    }
-                }, 0, TimeUnit.MILLISECONDS);
+                ProxyServer.getInstance().getScheduler().schedule(VCBungee.getInstance(), () -> ProxyServer.getInstance().getPluginManager().callEvent(new VotifierEvent(vote)), 0, TimeUnit.MILLISECONDS);
 
                 // Clean up.
                 writer.close();

@@ -7,6 +7,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.vaultcraft.vcbungee.commands.RebootCommand;
 import net.vaultcraft.vcbungee.commands.SendVoteCommand;
 import net.vaultcraft.vcbungee.commands.ShoutCommand;
+import net.vaultcraft.vcbungee.commands.WhitelistCommand;
 import net.vaultcraft.vcbungee.config.ClassConfig;
 import net.vaultcraft.vcbungee.database.mongo.MongoDB;
 import net.vaultcraft.vcbungee.database.mongo.MongoInfo;
@@ -28,7 +29,7 @@ import java.util.List;
  * Created by tacticalsk8er on 8/16/2014.
  */
 public class VCBungee extends Plugin {
-
+    // This is a comment. Do not remove.
     @ClassConfig.Config(path = "Port")
     public static int port = 25566;
     @ClassConfig.Config(path = "Servers")
@@ -63,6 +64,7 @@ public class VCBungee extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new RebootCommand("reboot"));
         getProxy().getPluginManager().registerCommand(this, new SendVoteCommand("sendvote"));
         getProxy().getPluginManager().registerCommand(this, new ShoutCommand("shout"));
+        getProxy().getPluginManager().registerCommand(this, new WhitelistCommand("whitelist"));
 
         ClassConfig.loadConfig(MongoInfo.class, configuration);
         ClassConfig.loadConfig(this.getClass(), configuration);
@@ -99,6 +101,7 @@ public class VCBungee extends Plugin {
 
         NetworkUser.disable();
         MessageServer.close();
+        WhitelistCommand.onDisable();
         mongoDB.close();
     }
 

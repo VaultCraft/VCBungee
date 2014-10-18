@@ -9,13 +9,14 @@ import java.util.List;
 public class GroupUtil {
 
     public enum Group {
-        OWNER(13, false),
-        DEVELOPER(12, false),
-        MANAGER(11, false),
-        ADMIN(10, false),
-        MOD(9, false),
-        HELPER(8, false),
-        ENDERDRAGON(7, true),
+        OWNER(14, false),
+        DEVELOPER(13, false),
+        MANAGER(12, false),
+        ADMIN(11, false),
+        MOD(10, false),
+        HELPER(9, false),
+        ENDERDRAGON(8, true),
+        WITHER(7, true),
         ENDERMAN(6, true),
         YOUTUBE(5, true),
         SKELETON(4, true),
