@@ -34,7 +34,6 @@ public class MongoDB {
     }
 
     /**
-     *
      * @return MongoClient
      */
     public MongoClient getClient() {

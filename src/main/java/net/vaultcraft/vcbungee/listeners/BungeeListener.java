@@ -47,6 +47,8 @@ public class BungeeListener implements Listener {
         NetworkUser.fromPlayer(event.getPlayer()).setDisconnected(true);
     }
 
+    public static long release;
+
     @EventHandler
     public void onPlayerPing(ProxyPingEvent event) throws IOException {
         Configuration conf = VCBungee.getInstance().getConfig();
@@ -62,7 +64,11 @@ public class BungeeListener implements Listener {
 
         ServerPing respond = event.getResponse();
         respond.setFavicon(Favicon.create(img));
-        respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&5&lWelcome &7" + (playerName.equals("MHF_Question") ? "New Player" : playerName) + " &5&lto &7VaultCraft"));
+        //respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&5&lWelcome &7" + (playerName.equals("MHF_Question") ? "New Player" : playerName) + " &5&lto &7VaultCraft"));
+        if (release < System.currentTimeMillis())
+            respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&7-=&d*&7=- &5VaultCraft &d- &5ALPHA &7-=&d*&=-                 &aWelcome!"));
+        else
+            respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&7-=&d*&7=- &5VaultCraft &d- &5ALPHA &7-=&d*&7=-                " + HHMMSS(release - System.currentTimeMillis())));
     }
 
     private static String getIp(InetAddress address) {
@@ -73,5 +79,14 @@ public class BungeeListener implements Listener {
         }
 
         return build.hashCode() + "";
+    }
+
+    private static String HHMMSS(long in) {
+        in = in/1000;
+        long hrs = in/3600;
+        in = in % 3600;
+        long mns = in/60;
+        in = in % 60;
+        return hrs+":"+mns+":"+in;
     }
 }
