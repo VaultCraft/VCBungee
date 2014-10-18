@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 /**
@@ -79,9 +80,9 @@ public class BungeeListener implements Listener {
         respond.setFavicon(Favicon.create(img));
         //respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&5&lWelcome &7" + (playerName.equals("MHF_Question") ? "New Player" : playerName) + " &5&lto &7VaultCraft"));
         if (release < System.currentTimeMillis())
-            respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&7-=&d*&7=- &5VaultCraft &d- &5ALPHA &7-=&d*&7=-                       &aWelcome!"));
+            respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&7-=&d*&7=- &5VaultCraft &d- &5ALPHA &7-=&d*&7=-\n&aWelcome!"));
         else
-            respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&7-=&d*&7=- &5VaultCraft &d- &5ALPHA &7-=&d*&7=-                       " + HHMMSS(release - System.currentTimeMillis())));
+            respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&7-=&d*&7=- &5VaultCraft &d- &5ALPHA &7-=&d*&7=-\n" + HHMMSS(release - System.currentTimeMillis())));
     }
 
     private static String getIp(InetAddress address) {
@@ -94,12 +95,14 @@ public class BungeeListener implements Listener {
         return build.hashCode() + "";
     }
 
+    final static DecimalFormat df = new DecimalFormat("00");
+
     private static String HHMMSS(long in) {
         in = in/1000;
         long hrs = in/3600;
         in = in % 3600;
         long mns = in/60;
         in = in % 60;
-        return hrs+":"+mns+":"+in;
+        return df.format(hrs)+":"+df.format(mns)+":"+df.format(in);
     }
 }
