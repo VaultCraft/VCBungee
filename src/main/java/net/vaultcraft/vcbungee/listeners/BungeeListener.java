@@ -77,7 +77,7 @@ public class BungeeListener implements Listener {
         BufferedImage img = ImageIO.read(url);
 
         ServerPing respond = event.getResponse();
-        respond.setFavicon(Favicon.create(img));
+        //respond.setFavicon(Favicon.create(img));
         //respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&5&lWelcome &7" + (playerName.equals("MHF_Question") ? "New Player" : playerName) + " &5&lto &7VaultCraft"));
         if (release < System.currentTimeMillis())
             respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&7-=&d*&7=- &5VaultCraft &d- &5ALPHA &7-=&d*&7=-\n&aWelcome!"));
