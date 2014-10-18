@@ -1,7 +1,6 @@
 package net.vaultcraft.vcbungee.listeners;
 
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
@@ -15,11 +14,8 @@ import net.vaultcraft.vcbungee.user.NetworkUser;
 import net.vaultcraft.vcbungee.user.UUIDFetcher;
 import net.vaultcraft.vcbungee.user.UserReadyThread;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.URL;
 import java.util.UUID;
 
 /**
@@ -71,12 +67,12 @@ public class BungeeListener implements Listener {
         if (conf.get("user." + ip) != null)
             playerName = conf.getString("user." + ip);
 
-        URL url = new URL("https://minotar.net/avatar/" + playerName + "/64.png");
+        //URL url = new URL("https://minotar.net/avatar/" + playerName + "/64.png");
 
-        BufferedImage img = ImageIO.read(url);
+        //BufferedImage img = ImageIO.read(url);
 
         ServerPing respond = event.getResponse();
-        respond.setFavicon(Favicon.create(img));
+        //respond.setFavicon(Favicon.create(img));
         //respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&5&lWelcome &7" + (playerName.equals("MHF_Question") ? "New Player" : playerName) + " &5&lto &7VaultCraft"));
         if (release < System.currentTimeMillis())
             respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&7-=&d*&7=- &5VaultCraft &d- &5ALPHA &7-=&d*&7=-                 &aWelcome!"));
