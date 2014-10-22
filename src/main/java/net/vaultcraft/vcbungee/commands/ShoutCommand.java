@@ -29,9 +29,14 @@ public class ShoutCommand extends Command {
         if (!use) {
             NetworkUser user = NetworkUser.fromPlayer((ProxiedPlayer)commandSender);
             for (int group : user.getGroups()) {
-                if (group >= GroupUtil.Group.ENDERMAN.getPermissionLevel())
+                if (group >= GroupUtil.Group.WOLF.getPermissionLevel())
                     use = true;
             }
+        }
+
+        if (!(use)) {
+            commandSender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lERROR&7: &fYou do not have permission for this command!"));
+            return;
         }
 
         if (cooldown.containsKey(commandSender.getName())) {
@@ -47,11 +52,8 @@ public class ShoutCommand extends Command {
         //Collect arguments
         String argMsg = "";
         for (String arg : args) {
-            argMsg+=(arg + ", ");
+            argMsg+=(arg + " ");
         }
-
-        if (argMsg.endsWith(", "))
-            argMsg = argMsg.substring(0, argMsg.length()-2);
 
         ProxyServer.getInstance().broadcast(ChatColor.translateAlternateColorCodes('&', "&e&l" + commandSender.getName() + " &f- &c&lSHOUT&f: &7" + argMsg));
         cooldown.put(commandSender.getName(), System.currentTimeMillis() + (60000));
