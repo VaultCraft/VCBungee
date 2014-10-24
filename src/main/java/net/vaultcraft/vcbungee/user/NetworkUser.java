@@ -44,7 +44,7 @@ public class NetworkUser {
         async_player_map.put(player, this);
         async_uuid_map.put(this.uuid, this);
         ProxyServer.getInstance().getScheduler().runAsync(VCBungee.getInstance(), () -> {
-            DBObject dbObject = VCBungee.getInstance().getMongoDB().query("VaultCraft", "Users", "UUID", uuid);
+            DBObject dbObject = VCBungee.getInstance().getMongoDB().query(VCBungee.mongoDBName, "Users", "UUID", uuid);
             if (dbObject != null) {
                 String groupList = dbObject.get("Group") == null ? "1" : (String) dbObject.get("Group");
                 groups = parseGroups(groupList);

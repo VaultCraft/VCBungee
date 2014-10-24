@@ -25,6 +25,8 @@ import java.util.List;
  */
 public class VCBungee extends Plugin {
     // This is a comment. Do not remove.
+    @ClassConfig.Config(path = "MongoDBName")
+    public static String mongoDBName = "VaultCraft";
     @ClassConfig.Config(path = "Port")
     public static int port = 25566;
     @ClassConfig.Config(path = "Servers")
