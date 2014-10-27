@@ -10,8 +10,6 @@ import net.vaultcraft.vcbungee.database.mongo.MongoDB;
 import net.vaultcraft.vcbungee.database.mongo.MongoInfo;
 import net.vaultcraft.vcbungee.listeners.BungeeListener;
 import net.vaultcraft.vcbungee.network.MessageServer;
-import net.vaultcraft.vcbungee.user.NetworkUser;
-import net.vaultcraft.vcbungee.user.UserReadyThread;
 import net.vaultcraft.vcbungee.vote.Votifier;
 import net.vaultcraft.vcbungee.vote.model.listeners.BasicVoteListener;
 
@@ -27,6 +25,8 @@ import java.util.List;
  */
 public class VCBungee extends Plugin {
     // This is a comment. Do not remove.
+    @ClassConfig.Config(path = "MongoDBName")
+    public static String mongoDBName = "VaultCraft";
     @ClassConfig.Config(path = "Port")
     public static int port = 25566;
     @ClassConfig.Config(path = "Servers")
@@ -89,15 +89,12 @@ public class VCBungee extends Plugin {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-
-        this.getProxy().getScheduler().runAsync(this, new UserReadyThread());
     }
 
     @Override
     public void onDisable() {
         Votifier.getInstance().onDisable();
 
-        NetworkUser.disable();
         MessageServer.close();
         WhitelistCommand.onDisable();
         mongoDB.close();

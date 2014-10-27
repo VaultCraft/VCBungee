@@ -1,7 +1,6 @@
 package net.vaultcraft.vcbungee.listeners;
 
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
@@ -13,7 +12,6 @@ import net.md_5.bungee.event.EventHandler;
 import net.vaultcraft.vcbungee.VCBungee;
 import net.vaultcraft.vcbungee.user.NetworkUser;
 import net.vaultcraft.vcbungee.user.UUIDFetcher;
-import net.vaultcraft.vcbungee.user.UserReadyThread;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -49,7 +47,7 @@ public class BungeeListener implements Listener {
     @EventHandler
     public void onLeave(PlayerDisconnectEvent event) {
         if(NetworkUser.fromPlayer(event.getPlayer()) != null)
-            NetworkUser.fromPlayer(event.getPlayer()).setDisconnected(true);
+            NetworkUser.remove(event.getPlayer());
         UUID uuid;
         try {
             uuid = UUIDFetcher.getUUIDOf(event.getPlayer().getName());
@@ -57,8 +55,6 @@ public class BungeeListener implements Listener {
             e.printStackTrace();
             return;
         }
-        if(UserReadyThread.getWaitingList().contains(uuid))
-            UserReadyThread.getWaitingList().remove(uuid);
     }
 
     public static long release;

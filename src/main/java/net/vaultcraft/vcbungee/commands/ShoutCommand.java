@@ -29,7 +29,7 @@ public class ShoutCommand extends Command {
         if (!use) {
             NetworkUser user = NetworkUser.fromPlayer((ProxiedPlayer)commandSender);
             for (int group : user.getGroups()) {
-                if (group >= GroupUtil.Group.ENDERMAN.getPermissionLevel())
+                if (group >= GroupUtil.Group.WOLF.getPermissionLevel())
                     use = true;
             }
         }
