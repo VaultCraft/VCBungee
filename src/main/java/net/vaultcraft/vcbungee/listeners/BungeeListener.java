@@ -13,11 +13,8 @@ import net.vaultcraft.vcbungee.VCBungee;
 import net.vaultcraft.vcbungee.user.NetworkUser;
 import net.vaultcraft.vcbungee.user.UUIDFetcher;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.UUID;
 
@@ -75,7 +72,7 @@ public class BungeeListener implements Listener {
         ServerPing respond = event.getResponse();
         //respond.setFavicon(Favicon.create(img));
         respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&5&lWelcome &7" + (playerName.equals("MHF_Question") ? "New Player" : playerName) + " &5&lto &7VaultCraft" +
-                "\n&5&lWe are currently in &7Pre-Alpha&5&l!"));
+                "\n&5&lWe are currently in &7Beta&5&l!"));
 
         /*if (release < System.currentTimeMillis())
             respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&7-=&d*&7=- &5VaultCraft &d- &5ALPHA &7-=&d*&7=-\n&aWelcome!"));
