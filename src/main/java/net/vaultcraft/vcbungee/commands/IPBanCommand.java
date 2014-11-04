@@ -77,7 +77,7 @@ public class IPBanCommand extends Command implements Listener {
     public static void disbale() {
         configuration.set("IPBans", ipBans);
         try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, new File(VCBungee.getInstance().getDataFolder(), "config.yml"));
+            ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, new File(VCBungee.getInstance().getDataFolder(), "ipbans.yml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
