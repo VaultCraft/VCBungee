@@ -65,12 +65,7 @@ public class BungeeListener implements Listener {
         if (conf.get("user." + ip) != null)
             playerName = conf.getString("user." + ip);
 
-        //URL url = new URL("https://minotar.net/avatar/" + playerName + "/64.png");
-
-        //BufferedImage img = ImageIO.read(url);
-
         ServerPing respond = event.getResponse();
-        //respond.setFavicon(Favicon.create(img));
         respond.setDescription(ChatColor.translateAlternateColorCodes('&', "&5&lWelcome &7" + (playerName.equals("MHF_Question") ? "New Player" : playerName) + " &5&lto &7VaultCraft" +
                 "\n&5&lWe are currently in &7Beta&5&l!"));
 
