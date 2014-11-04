@@ -63,6 +63,7 @@ public class VCBungee extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new ShoutCommand("shout"));
         getProxy().getPluginManager().registerCommand(this, new WhitelistCommand("whitelist"));
         getProxy().getPluginManager().registerCommand(this, new SetReleaseTime("setrelease"));
+        getProxy().getPluginManager().registerCommand(this, new IPBanCommand("ipban"));
 
         ClassConfig.loadConfig(MongoInfo.class, configuration);
         ClassConfig.loadConfig(this.getClass(), configuration);
@@ -98,6 +99,7 @@ public class VCBungee extends Plugin {
         MessageServer.close();
         WhitelistCommand.onDisable();
         mongoDB.close();
+        IPBanCommand.disbale();
     }
 
     public static VCBungee getInstance() {
