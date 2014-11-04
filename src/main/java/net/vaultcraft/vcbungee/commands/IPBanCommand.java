@@ -47,6 +47,7 @@ public class IPBanCommand extends Command implements Listener {
         }
 
         ipBans = configuration.getStringList("IPBans");
+        ProxyServer.getInstance().getPluginManager().registerListener(VCBungee.getInstance(), this);
     }
 
 
