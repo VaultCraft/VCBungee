@@ -13,6 +13,8 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.md_5.bungee.event.EventHandler;
 import net.vaultcraft.vcbungee.VCBungee;
 import net.vaultcraft.vcbungee.user.Form;
+import net.vaultcraft.vcbungee.user.GroupUtil;
+import net.vaultcraft.vcbungee.user.NetworkUser;
 import net.vaultcraft.vcbungee.user.Prefix;
 
 import java.io.File;
@@ -53,6 +55,12 @@ public class IPBanCommand extends Command implements Listener {
 
     @Override
     public void execute(CommandSender commandSender, String[] args) {
+        if((commandSender instanceof ProxiedPlayer) && !GroupUtil.hasPermission(NetworkUser.fromPlayer((ProxiedPlayer) commandSender).getGroups(), GroupUtil.Group.ADMIN))
+        {
+            Form.at(commandSender, Prefix.ERROR, "You do not have permission to run this command.");
+            return;
+        }
+
         if(args.length == 0) {
             Form.at(commandSender, Prefix.ERROR, "Format: /ipban <player>");
             return;
