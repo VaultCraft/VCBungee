@@ -96,7 +96,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>LATEST</version>
+            <version>3.0.0-beta2</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
